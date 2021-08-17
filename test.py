@@ -39,7 +39,7 @@ def created_data():
         sh4=gc1.open('Handpick - Đơn đặt hàng').worksheet('1. DON HANG')
         order=sh4.get_all_records()
         order_df=pd.DataFrame(order)
-        order_df=order_df.drop(columns={'KHÁCH HÀNG','HÌNH ẢNH','NHÓM','ĐVT','QUI CÁCH','ĐÓNG GÓI','LOẠI QC','GHI CHÚ','NMSX','LOẠI HÀNG','GỖ','SƠN','NỆM'},axis=0)
+        order_df=order_df.drop(columns={'KHÁCH HÀNG','HÌNH ẢNH','NHÓM','ĐVT','QUI CÁCH','ĐÓNG GÓI','LOẠI QC','GHI CHÚ','NMSX','LOẠI HÀNG','GỖ','SƠN','NỆM','TÊN_TTF'},axis=0)
         order_df.columns=order_df.columns.str.replace(" ","_")       
 
 
