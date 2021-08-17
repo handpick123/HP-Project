@@ -39,7 +39,7 @@ def created_data():
         sh4=gc1.open('Handpick - Đơn đặt hàng').worksheet('1. DON HANG')
         order=sh4.get_all_records()
         order_df=pd.DataFrame(order)
-        order_df=order_df.drop(columns={'KHÁCH HÀNG','HÌNH ẢNH','NHÓM','ĐVT','QUI CÁCH','ĐÓNG GÓI','LOẠI QC','GHI CHÚ','NMSX','LOẠI HÀNG','GỖ','SƠN','NỆM','TÊN TTF'},axis=0)
+        order_df=order_df.drop(columns={'KHÁCH HÀNG','HÌNH ẢNH','NHÓM','ĐVT','QUI CÁCH','ĐÓNG GÓI','LOẠI QC','GHI CHÚ','NMSX','LOẠI HÀNG','GỖ','SƠN','NỆM','TÊN TTF','NGÀY LẬP'},axis=0)
         order_df.columns=order_df.columns.str.replace(" ","_")       
 
 
@@ -163,7 +163,7 @@ def created_data():
         new_={k:{sk:sv[-1] for sk,sv in s.items() if len(sv)>0} for k,s in _list.items() }
         new_status=pd.DataFrame.from_dict(new_, orient='index').reset_index()
         new_status=new_status.rename(columns={'index':'ID_ORDER','Bước':'STEP'})
-
+        order_df_f=order_df.merge(new_status,how='left',on='ID_ORDER')
         # working_days=TD_df_final.copy()
         # working_days['NGÀY_GIẢI_QUYẾT']=working_days.apply(lambda x: len(pd.bdate_range(x['NGÀY_NHẬN'],
         #                                                                 x['NGÀY_GIAO'])) if x.notnull().all() else np.nan, axis = 1)
@@ -173,7 +173,7 @@ def created_data():
         # # pivot_df=pivot_df.apply(lambda x: x.fillna(x.mean()),axis=0)
         # pivot_df=pivot_df.fillna(pivot_df.groupby('THÁNG_GIAO').transform('mean'))
         # unpivot=pivot_df.melt(id_vars=['ID_ORDER','THÁNG_GIAO'],value_name='NGÀY_GIẢI_QUYẾT')
-        return new_status,TD_df_final,order_df
+        return new_status,TD_df_final,order_df_f
 st.set_page_config(layout='wide')
 st.markdown("<h1 style='text-align: center; color: blue;font-style:bold'>OPERATION DASHBOARD</h1>", unsafe_allow_html=True)
 st.markdown("<h4 style='text-align: right; color:black;font-style: italic'> Created by HTL</h4>", unsafe_allow_html=True)
