@@ -205,7 +205,7 @@ def main():
                     # st.write(order_df)
                     # list_order=order_df['ID_ORDER'].unique().tolist()
                     # list_bp=order_df['Bộ_Phận'].unique().tolist()
-                    order_df.info()
+                    st.write(order_df.info())
                 else:
                     order_df.info()
                     # or_result=order_df.loc[order_df['ID_ORDER'].str.contains(id_or,na=False)]
