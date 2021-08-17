@@ -188,8 +188,8 @@ def main():
             last_status=list[0]
             average_df=list[1]
             order_df=list[2]
-            c1_1,c1_2=st.beta_columns((1,1))
-            c1,c2,c3 = st.beta_columns((2,1,1))
+            c1_1,c1_2=st.columns((1,1))
+            c1,c2,c3 = st.columns((2,1,1))
 
             with c1_1:
                 st.markdown('### A. TIẾN ĐỘ CHUNG')
@@ -200,7 +200,7 @@ def main():
             with c3:
                 st.selectbox('sdf',['a','b','f'])
 
-            col1,col2=st.beta_columns((1,1))
+            col1,col2=st.columns((1,1))
             with col1:
                 last_status
                 average_df
