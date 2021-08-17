@@ -39,7 +39,6 @@ def created_data():
         order_df=order_df.drop(columns={'KHÁCH HÀNG','HÌNH ẢNH','NHÓM','ĐVT','QUI CÁCH','ĐÓNG GÓI','LOẠI QC','GHI CHÚ','NMSX','LOẠI HÀNG','GỖ','SƠN','NỆM','TÊN TTF','NGÀY LẬP','SỐ ĐƠN HÀNG'},axis=0)
         order_df.columns=order_df.columns.str.replace(" ","_")       
 
-        order_df
         data=Form_df.set_index(['Dấu_thời_gian','Thao_tác_của_bạn'])
         data.columns=data.columns.str.split('-', expand=True)
 
@@ -212,12 +211,12 @@ def main():
                     st.markdown('')
                     st.write(or_result)
             
-            # with col2:
-            #         for l in list_bp:
-            #             st.markdown('### {}'.format(l))
-            #             bp_df=or_result[or_result['Bộ_Phận']==l].reset_index()
-            #             bp_df_=bp_df[['ID_ORDER','TÊN_HANDPICK','Tình_trạng']]
-            #             bp_df_
+            with col2:
+                    for l in list_bp:
+                        st.markdown('### {}'.format(l))
+                        bp_df=or_result[or_result['Bộ_Phận']==l].reset_index()
+                        bp_df_=bp_df[['ID_ORDER','TÊN_HANDPICK','Tình_trạng']]
+                        bp_df_
         else:
             st.warning("Incorrect Username/Password")
 main()
