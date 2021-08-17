@@ -30,11 +30,11 @@ category_df=pd.DataFrame(category)
 
 category_df
 
-# sh3=gc1.open('HP - Hist').worksheet('Form')
-# Form=sh3.get_all_records()
-# Form_df=pd.DataFrame(Form)
-# Form_df.columns=Form_df.columns.str.replace(" ","_")
-
+sh3=gc1.open('HP - Hist').worksheet('Form')
+Form=sh3.get_all_records()
+Form_df=pd.DataFrame(Form)
+Form_df.columns=Form_df.columns.str.replace(" ","_")
+Form_df
 # sh4=gc1.open('Handpick - Đơn đặt hàng').worksheet('1. DON HANG')
 # order=sh4.get_all_records()
 # order_df=pd.DataFrame(order)
