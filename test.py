@@ -201,11 +201,10 @@ def main():
             list_order=[]
             with col1:
                 if not id_or:
-                    or_result=order_df.copy()
                     st.markdown('')
-                    st.write(or_result)
-                    list_order=or_result['ID_ORDER'].unique().tolist()
-                    list_bp=or_result['Bộ_Phận'].unique().tolist()
+                    st.write(order_df)
+                    list_order=order_df['ID_ORDER'].unique().tolist()
+                    list_bp=order_df['Bộ_Phận'].unique().tolist()
                 else:
                     or_result=order_df.loc[order_df['ID_ORDER'].str.contains(id_or,na=False)]
                     list_order=or_result['ID_ORDER'].unique().tolist()
