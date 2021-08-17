@@ -196,6 +196,7 @@ def main():
                 id_or=st.text_input('Nhập SĐH',)
             col1,col2=st.columns((2.5,2))
             list_order=[]
+            or_result=0
             with col1:
                 if not id_or:
                     st.markdown('')
