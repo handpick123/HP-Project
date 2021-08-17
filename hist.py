@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd #-> Để update data dạng bản
 from oauth2client.service_account import ServiceAccountCredentials #-> Để nhập Google Spreadsheet Credentials
 import seaborn as sns
-def created_data():
+
                     ## Collect QR scan database from Googlesheet
     credentials = service_account.Credentials.from_service_account_info(
         st.secrets["gcp_service_account"],
@@ -181,19 +181,19 @@ def created_data():
     # pivot_df=pivot_df.apply(lambda x: x.fillna(x.mean()),axis=0)
     pivot_df=pivot_df.fillna(pivot_df.groupby('THÁNG_GIAO').transform('mean'))
     unpivot=pivot_df.melt(id_vars=['ID_ORDER','THÁNG_GIAO'],value_name='NGÀY_GIẢI_QUYẾT')
-    return order_df,new_status
-st.set_page_config(layout='wide')
-st.markdown("<h1 style='text-align: center; color: blue;font-style:bold'>OPERATION DASHBOARD</h1>", unsafe_allow_html=True)
-st.markdown("<h4 style='text-align: right; color:black;font-style: italic'> Created by HTL</h4>", unsafe_allow_html=True)
-st.markdown("")
+    unpivot
+# st.set_page_config(layout='wide')
+# st.markdown("<h1 style='text-align: center; color: blue;font-style:bold'>OPERATION DASHBOARD</h1>", unsafe_allow_html=True)
+# st.markdown("<h4 style='text-align: right; color:black;font-style: italic'> Created by HTL</h4>", unsafe_allow_html=True)
+# st.markdown("")
 
-def main():
-    username = st.sidebar.text_input("User Name")
-    password = st.sidebar.text_input("Password",type='password')
-    if st.sidebar.checkbox("Login"):
-        if password == '7611':
-            list=created_data()
-            last_status=list[0]
-            order_df=list[1]
-            order_df
-main()
+# def main():
+#     username = st.sidebar.text_input("User Name")
+#     password = st.sidebar.text_input("Password",type='password')
+#     if st.sidebar.checkbox("Login"):
+#         if password == '7611':
+#             list=created_data()
+#             last_status=list[0]
+#             order_df=list[1]
+#             order_df
+# main()
