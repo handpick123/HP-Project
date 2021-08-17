@@ -189,15 +189,15 @@ def main():
             list=created_data()
             last_status=list[0]
             order_df=list[1]
-            c1_1,c1_2=st.beta_columns((2.5,2))
-            c1,c2,c3 = st.beta_columns((1.125,1.125,1.75))
+            c1_1,c1_2=st.columns((2.5,2))
+            c1,c2,c3 = st.columns((1.125,1.125,1.75))
             with c1_2:
                 st.markdown('### B. TIẾN ĐỘ CHUNG')
             with c1_1:
                 st.markdown('### A. TIẾN ĐỘ ĐƠN HÀNG')
             with c1:
                 id_or=st.text_input('Nhập SĐH',)
-            col1,col2=st.beta_columns((2.5,2))
+            col1,col2=st.columns((2.5,2))
             list_order=[]
             with col1:
                 if not id_or:
