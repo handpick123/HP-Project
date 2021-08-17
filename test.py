@@ -187,15 +187,15 @@ def main():
             list=created_data()
             last_status=list[0]
             order_df=list[1]
-            c1_1,c1_2=st.beta_columns((2.5,2))
-            c1,c2,c3 = st.beta_columns((1.125,1.125,1.75))
+            c1_1,c1_2=st.columns((2.5,2))
+            c1,c2,c3 = st.columns((1.125,1.125,1.75))
             with c1_2:
                 st.markdown('### B. TIẾN ĐỘ CHUNG')
             with c1_1:
                 st.markdown('### A. TIẾN ĐỘ ĐƠN HÀNG')
             with c1:
                 id_or=st.text_input('Nhập SĐH',)
-            col1,col2=st.beta_columns((2.5,2))
+            col1,col2=st.columns((2.5,2))
             list_order=[]
             with col1:
                 if not id_or:
@@ -212,12 +212,12 @@ def main():
                     st.markdown('')
                     st.write(or_result)
             
-            with col2:
-                    for l in list_bp:
-                        st.markdown('### {}'.format(l))
-                        bp_df=or_result[or_result['Bộ_Phận']==l].reset_index()
-                        bp_df_=bp_df[['ID_ORDER','TÊN_HANDPICK','Tình_trạng']]
-                        bp_df_
+            # with col2:
+            #         for l in list_bp:
+            #             st.markdown('### {}'.format(l))
+            #             bp_df=or_result[or_result['Bộ_Phận']==l].reset_index()
+            #             bp_df_=bp_df[['ID_ORDER','TÊN_HANDPICK','Tình_trạng']]
+            #             bp_df_
         else:
             st.warning("Incorrect Username/Password")
 main()
