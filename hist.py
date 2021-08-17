@@ -24,10 +24,11 @@ process_syntax=syntaxs_df #[~syntaxs_df["Step"].str.contains('HP', na=False)]
 process_syntax
 # checker_syntax=syntaxs_df.loc[syntaxs_df["Step"].str.contains('HP')==True]
 
-# sh2=gc1.open('HP - Hist').worksheet('Category')
-# category=sh2.get_all_records()
-# category_df=pd.DataFrame(category)
+sh2=gc1.open('HP - Hist').worksheet('Category')
+category=sh2.get_all_records()
+category_df=pd.DataFrame(category)
 
+category_df
 
 # sh3=gc1.open('HP - Hist').worksheet('Form')
 # Form=sh3.get_all_records()
