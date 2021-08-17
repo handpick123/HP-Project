@@ -164,7 +164,7 @@ def created_data():
         new_status=pd.DataFrame.from_dict(new_, orient='index').reset_index()
         new_status=new_status.rename(columns={'index':'ID_ORDER','Bước':'STEP'})
         order_df_=order_df.merge(new_status,how='left',on='ID_ORDER')
-        order_df_f=order_df_.drop(columns={'Thời_gian','STEP','Bộ_Phận','Nhóm_ĐH','ID_ORDER','NGÀY_XUẤT'})
+        order_df_f=order_df_.drop(columns={'Thời_gian','STEP','Bộ_Phận','Nhóm_ĐH','NGÀY_XUẤT'})
         # working_days=TD_df_final.copy()
         # working_days['NGÀY_GIẢI_QUYẾT']=working_days.apply(lambda x: len(pd.bdate_range(x['NGÀY_NHẬN'],
         #                                                                 x['NGÀY_GIAO'])) if x.notnull().all() else np.nan, axis = 1)
