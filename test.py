@@ -39,7 +39,7 @@ def created_data():
         sh4=gc1.open('Handpick - Đơn đặt hàng').worksheet('1. DON HANG')
         order=sh4.get_all_records()
         order_df=pd.DataFrame(order)
-        order_df=order_df.drop(columns={'KHÁCH HÀNG','HÌNH ẢNH','NHÓM','ĐVT','QUI CÁCH','ĐÓNG GÓI','LOẠI QC','GHI CHÚ','NMSX','LOẠI HÀNG'},axis=0)
+        order_df=order_df.drop(columns={'KHÁCH HÀNG','HÌNH ẢNH','NHÓM','ĐVT','QUI CÁCH','ĐÓNG GÓI','LOẠI QC','GHI CHÚ','NMSX','LOẠI HÀNG','GỖ','SƠN','NỆM'},axis=0)
         order_df.columns=order_df.columns.str.replace(" ","_")       
 
 
@@ -188,12 +188,25 @@ def main():
             last_status=list[0]
             average_df=list[1]
             order_df=list[2]
-            fig,ax=plt.subplots()
-            sns.countplot(x='Bộ_Phận',data=last_status)
-            st.pyplot(fig)
-            last_status
-            average_df
-            order_df
+            c1_1,c1_2=st.beta_columns((1,1))
+            c1,c2,c3 = st.beta_columns((2,1,1))
+
+            with c1_1:
+                st.markdown('### A. TIẾN ĐỘ CHUNG')
+            with c1_2:
+                st.markdown('### B. DANH SÁCH CHI TIẾT')
+            with c2:
+                st.selectbox('Nhóm',['BỘ_PHẬN','ĐƠN HÀNG'])
+            with c3:
+                st.selectbox('sdf',['a','b','f'])
+
+            col1,col2=st.beta_columns((1,1))
+            with col1:
+                last_status
+                average_df
+            with col2:
+
+                order_df
 
         else:
             st.warning("Incorrect Username/Password")
