@@ -203,7 +203,7 @@ def main():
                 else:
                     or_result=order_df.loc[order_df['ID_ORDER'].str.contains(id_or,na=False)]
                 list_order=or_result['ID_ORDER'].unique().tolist()
-                or_result[['Tình_trạng','Bộ_Phận']=or_result[['Tình_trạng','Bộ_Phận']].fillna(value='Chưa cập nhật')
+                or_result[['Tình_trạng','Bộ_Phận']]=or_result[['Tình_trạng','Bộ_Phận']].fillna(value='Chưa cập nhật')
                 list_bp=or_result['Bộ_Phận'].unique().tolist()
                 st.markdown('')
                 st.write(or_result)
