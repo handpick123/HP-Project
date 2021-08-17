@@ -1,4 +1,3 @@
-from matplotlib.pyplot import subplot, subplots
 import streamlit as st
 from google.oauth2 import service_account
 from datetime import datetime as dt #-> Để xử lý data dạng datetime
@@ -7,7 +6,6 @@ import numpy as np
 import pandas as pd #-> Để update data dạng bản
 from oauth2client.service_account import ServiceAccountCredentials #-> Để nhập Google Spreadsheet Credentials
 import seaborn as sns
-import matplotlib.pyplot as plt
 def created_data():
                 ## Collect QR scan database from Googlesheet
         credentials = service_account.Credentials.from_service_account_info(
