@@ -175,6 +175,7 @@ def created_data():
         # # pivot_df=pivot_df.apply(lambda x: x.fillna(x.mean()),axis=0)
         # pivot_df=pivot_df.fillna(pivot_df.groupby('THÁNG_GIAO').transform('mean'))
         # unpivot=pivot_df.melt(id_vars=['ID_ORDER','THÁNG_GIAO'],value_name='NGÀY_GIẢI_QUYẾT')
+        order_df_f
         return new_status,order_df_f
 st.set_page_config(layout='wide')
 st.markdown("<h1 style='text-align: center; color: blue;font-style:bold'>OPERATION DASHBOARD</h1>", unsafe_allow_html=True)
