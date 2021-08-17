@@ -201,22 +201,25 @@ def main():
             list_order=[]
             with col1:
                 if not id_or:
-                    st.markdown('')
-                    st.write(order_df)
-                    list_order=order_df['ID_ORDER'].unique().tolist()
-                    list_bp=order_df['Bộ_Phận'].unique().tolist()
+                    # st.markdown('')
+                    # st.write(order_df)
+                    # list_order=order_df['ID_ORDER'].unique().tolist()
+                    # list_bp=order_df['Bộ_Phận'].unique().tolist()
+                    order_df.info()
                 else:
-                    or_result=order_df.loc[order_df['ID_ORDER'].str.contains(id_or,na=False)]
-                    list_order=or_result['ID_ORDER'].unique().tolist()
-                    list_bp=or_result['Bộ_Phận'].unique().tolist()
-                    st.markdown('')
-                    st.write(or_result)
-            with col2:
-                    for l in list_bp:
-                        st.markdown('### {}'.format(l))
-                        bp_df=or_result[or_result['Bộ_Phận']==l].reset_index()
-                        bp_df_=bp_df[['ID_ORDER','TÊN_HANDPICK','Tình_trạng']]
-                        bp_df_
+                    order_df.info()
+                    # or_result=order_df.loc[order_df['ID_ORDER'].str.contains(id_or,na=False)]
+                    # list_order=or_result['ID_ORDER'].unique().tolist()
+                    # list_bp=or_result['Bộ_Phận'].unique().tolist()
+                    # st.markdown('')
+                    # st.write(or_result)
+            
+            # with col2:
+            #         for l in list_bp:
+            #             st.markdown('### {}'.format(l))
+            #             bp_df=or_result[or_result['Bộ_Phận']==l].reset_index()
+            #             bp_df_=bp_df[['ID_ORDER','TÊN_HANDPICK','Tình_trạng']]
+            #             bp_df_
         else:
             st.warning("Incorrect Username/Password")
 main()
