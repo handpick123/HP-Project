@@ -10,7 +10,6 @@ gsheetsdb==0.1.13
 secure-smtplib
 oauth2client
 openpyxl==3.0.5
-matplotlib
 seaborn
 xlsxwriter
 gspread
