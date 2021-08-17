@@ -1,21 +1,14 @@
+from matplotlib.pyplot import subplot, subplots
 import streamlit as st
 import hashlib
-
-from streamlit.elements.exception import marshall
-from streamlit.elements.markdown import MarkdownMixin
 from google.oauth2 import service_account
-
-import requests #-> Để gọi API
-import re #-> Để xử lý data dạng string
 from datetime import datetime as dt #-> Để xử lý data dạng datetime
-import time
 import gspread #-> Để update data lên Google Spreadsheet
 import numpy as np
 import pandas as pd #-> Để update data dạng bản
-import json 
 from oauth2client.service_account import ServiceAccountCredentials #-> Để nhập Google Spreadsheet Credentials
-def make_hashes(password):
-    return hashlib.sha256(str.encode(password)).hexdigest()
+import seaborn as sns
+import matplotlib.pyplot as plt
 def created_data():
                 ## Collect QR scan database from Googlesheet
         credentials = service_account.Credentials.from_service_account_info(
@@ -169,6 +162,7 @@ def created_data():
         hist_order=pd.DataFrame.from_dict(_list, orient='index').reset_index()
         new_={k:{sk:sv[-1] for sk,sv in s.items() if len(sv)>0} for k,s in _list.items() }
         new_status=pd.DataFrame.from_dict(new_, orient='index').reset_index()
+        new_status=new_status.rename(columns={'index':'ID_ORDER','Bước':'STEP'})
 
         # working_days=TD_df_final.copy()
         # working_days['NGÀY_GIẢI_QUYẾT']=working_days.apply(lambda x: len(pd.bdate_range(x['NGÀY_NHẬN'],
@@ -179,9 +173,11 @@ def created_data():
         # # pivot_df=pivot_df.apply(lambda x: x.fillna(x.mean()),axis=0)
         # pivot_df=pivot_df.fillna(pivot_df.groupby('THÁNG_GIAO').transform('mean'))
         # unpivot=pivot_df.melt(id_vars=['ID_ORDER','THÁNG_GIAO'],value_name='NGÀY_GIẢI_QUYẾT')
-
-
         return new_status,TD_df_final,order_df
+st.set_page_config(layout='wide')
+st.markdown("<h1 style='text-align: center; color: blue;font-style:bold'>OPERATION DASHBOARD</h1>", unsafe_allow_html=True)
+st.markdown("<h4 style='text-align: right; color:black;font-style: italic'> Created by HTL</h4>", unsafe_allow_html=True)
+st.markdown("")
 
 def main():
     username = st.sidebar.text_input("User Name")
@@ -192,11 +188,14 @@ def main():
             last_status=list[0]
             average_df=list[1]
             order_df=list[2]
-            last_status,average_df,order_df
+            fig,ax=plt.subplots()
+            sns.countplot(x='Bộ_Phận',data=last_status)
+            st.pyplot(fig)
+            last_status
+            average_df
+            order_df
 
         else:
             st.warning("Incorrect Username/Password")
-
-
 main()
 
