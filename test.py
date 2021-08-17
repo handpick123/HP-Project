@@ -201,7 +201,7 @@ def main():
             with c3:
                 st.selectbox('sdf',['a','b','f'])
 
-            col1,col2=st.columns((1.5,2))
+            col1,col2=st.columns((1,1))
             with col1:
                 last_status
                 average_df
