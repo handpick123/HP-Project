@@ -106,13 +106,21 @@ def main():
                 list_bp=sorted(or_result['Bộ_Phận'].unique().tolist())
                 st.markdown('')
                 st.write(or_result)
-            with col2:
-                    for l in list_bp:
-                        st.markdown("<h4 style='text-align: left; color: blue;font-style:bold'>{}</h1>".format(l),unsafe_allow_html=True)
-                        st.markdown('')
-                        bp_df=or_result[or_result['Bộ_Phận']==l].reset_index()
-                        bp_df_=bp_df[['ID_ORDER','TÊN_HANDPICK','Tình_trạng']]
-                        bp_df_
+            r3_1,r3_2,r3_3,r3_4=st.columns((1.25,1.25,1,1))
+            for l in range(0,round(len(list_bp)/2)):
+                with r3_1:
+                    st.markdown("<h4 style='text-align: left; color: blue;font-style:bold'>{}</h1>".format(list_bp[l]),unsafe_allow_html=True)
+                    st.markdown('')
+                    bp_df=or_result[or_result['Bộ_Phận']==list_bp[l]].reset_index()
+                    bp_df_=bp_df[['ID_ORDER','TÊN_HANDPICK','Tình_trạng']]
+                    bp_df_
+            for m in range(round(len(list_bp)/2),len(list_bp)):
+                with r3_2:
+                    st.markdown("<h4 style='text-align: left; color: blue;font-style:bold'>{}</h1>".format(list_bp[m]),unsafe_allow_html=True)
+                    st.markdown('')
+                    bp_df=or_result[or_result['Bộ_Phận']==list_bp[m]].reset_index()
+                    bp_df_=bp_df[['ID_ORDER','TÊN_HANDPICK','Tình_trạng']]
+                    bp_df_
         else:
             st.warning("Incorrect Username/Password")
 main()
