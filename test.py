@@ -51,8 +51,8 @@ def created_data():
         data_v2=data_v1.merge(category_df,how='left',on='ID')
         data_v2=data_v2.sort_values(by=['QUÉT_MÃ_ĐHM','BỘ_PHẬN','Dấu_thời_gian'])
         data_v3=data_v2.replace("",np.nan).ffill(axis = 0).reset_index()
-        data_v4=data_v3.merge(process_syntax,how='left',on='Thao_tác_của_bạn')
-
+        data_v=data_v3.merge(process_syntax,how='left',on='Thao_tác_của_bạn')
+        data_v4=data_v[data_v['Bộ_phận'].str.contains('D')==False]
         list_order=data_v4['QUÉT_MÃ_ĐHM'].unique().tolist()
         _list={}
         for i in list_order:
@@ -65,13 +65,26 @@ def created_data():
             _list[i]['Nhóm_ThuMua']=data_v4.loc[data_v4.QUÉT_MÃ_ĐHM==i]['Order Category 3'].to_list()
             _list[i]['Nhà_máy']=data_v4.loc[data_v4.QUÉT_MÃ_ĐHM==i]['NHÀ_MÁY'].to_list()
 
-        hist_order=pd.DataFrame.from_dict(_list, orient='index').reset_index()
         new_={k:{sk:sv[-1] for sk,sv in s.items() if len(sv)>0} for k,s in _list.items() }
         new_status=pd.DataFrame.from_dict(new_, orient='index').reset_index()
         new_status=new_status.rename(columns={'index':'ID_ORDER','Bước':'STEP'})
         order_df_=order_df.merge(new_status,how='left',on='ID_ORDER')
         order_df_f=order_df_.drop(columns={'Thời_gian','STEP','NGÀY_XUẤT','Nhóm_ĐH'})
-        return new_status,order_df_f
+        D_=data_v.loc[data_v['Bộ_phận'].str.contains('D')==True]
+        tm_order=D_['QUÉT_MÃ_ĐHM'].unique().tolist()
+        tm_list={}
+        for j in tm_order:
+            tm_list[j]={}
+            tm_list[j]['Thời_gian']=D_.loc[D_.QUÉT_MÃ_ĐHM==j]['Dấu_thời_gian'].to_list()
+            tm_list[j]['Bộ_Phận']=D_.loc[D_.QUÉT_MÃ_ĐHM==j]['Bộ_phận'].to_list()
+            tm_list[j]['Tình_trạng']=D_.loc[D_.QUÉT_MÃ_ĐHM==j]['Mô_Tả'].to_list()     
+
+        tm_df={k2:{sk2:sv2[-1] for sk2,sv2 in s2.items() if len(sv2)>0} for k2,s2 in tm_list.items() }
+        tm_df_=pd.DataFrame.from_dict(tm_df, orient='index').reset_index()
+        tm_df_=tm_df_.rename(columns={'index':'ID_ORDER','Bước':'STEP'})
+        order_D=tm_df_.merge(order_df,how='left',on='ID_ORDER')
+        order_D_=order_D[['ID_ORDER','TÊN_HANDPICK','Tình_trạng']]
+        return new_status,order_df_f,order_D_
 st.set_page_config(layout='wide')
 st.markdown("<h1 style='text-align: center; color: blue;font-style:bold'>OPERATION DASHBOARD</h1>", unsafe_allow_html=True)
 st.markdown("<h4 style='text-align: right; color:black;font-style: italic'> Created by HTL</h4>", unsafe_allow_html=True)
@@ -85,6 +98,7 @@ def main():
             list=created_data()
             last_status=list[0]
             order_df=list[1]
+            D=list[2]
             c1_1,c1_2=st.columns((2.5,2))
             c1,c2,c3 = st.columns((1.125,1.125,1.75))
             with c1_2:
@@ -99,8 +113,10 @@ def main():
             with col1:
                 if not id_or:
                     or_result=order_df
+                    TM=D
                 else:
                     or_result=order_df.loc[order_df['ID_ORDER'].str.contains(id_or,na=False)]
+                    TM=D[D['ID_ORDER'].str.contains(id_or,na=False)]
                 list_order=or_result['ID_ORDER'].unique().tolist()
                 or_result[['Tình_trạng','Bộ_Phận']]=or_result[['Tình_trạng','Bộ_Phận']].fillna(value='0. Chưa cập nhật')
                 list_bp=sorted(or_result['Bộ_Phận'].unique().tolist())
@@ -114,6 +130,8 @@ def main():
                     bp_df=or_result[or_result['Bộ_Phận']==list_bp[l]].reset_index()
                     bp_df_=bp_df[['ID_ORDER','TÊN_HANDPICK','Tình_trạng']]
                     bp_df_
+                    st.markdown("<h4 style='text-align: left; color: blue;font-style:bold'>D. Thu mua</h1>",unsafe_allow_html=True)
+                    D
             for m in range(round(len(list_bp)/2),len(list_bp)):
                 with r3_2:
                     st.markdown("<h4 style='text-align: left; color: blue;font-style:bold'>{}</h1>".format(list_bp[m]),unsafe_allow_html=True)
@@ -123,5 +141,5 @@ def main():
                     bp_df_
         else:
             st.warning("Incorrect Username/Password")
-main()
-
+if __name__=='__main__':
+    main()
