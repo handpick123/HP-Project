@@ -36,6 +36,7 @@ def created_data():
         order_df=pd.DataFrame(order)
         order_df=order_df.drop(columns={'KHÁCH HÀNG','HÌNH ẢNH','NHÓM','ĐVT','QUI CÁCH','ĐÓNG GÓI','LOẠI QC','GHI CHÚ','NMSX','LOẠI HÀNG','GỖ','SƠN','NỆM','TÊN TTF','NGÀY LẬP','SỐ ĐƠN HÀNG'},axis=0)
         order_df['S/L']=order_df['S/L'].astype('str')
+        order_df['SỐ ĐƠN HÀNG']=order_df['SỐ ĐƠN HÀNG'].astype('str')
         order_df.columns=order_df.columns.str.replace(" ","_")       
 
         data=Form_df.set_index(['Dấu_thời_gian','Thao_tác_của_bạn'])
