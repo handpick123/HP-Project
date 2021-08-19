@@ -82,9 +82,12 @@ def created_data():
 
         tm_df={k2:{sk2:sv2[-1] for sk2,sv2 in s2.items() if len(sv2)>0} for k2,s2 in tm_list.items() }
         tm_df_=pd.DataFrame.from_dict(tm_df, orient='index').reset_index()
-        tm_df_=tm_df_.rename(columns={'index':'ID_ORDER','Bước':'STEP'})
-        order_D=tm_df_.merge(order_df,how='left',on='ID_ORDER')
-        order_D_=order_D[['ID_ORDER','TÊN_HANDPICK','Tình_trạng']]
+        if tm_df_.empty:
+            order_D_=""
+        else:
+            tm_df_=tm_df_.rename(columns={'index':'ID_ORDER','Bước':'STEP'})
+            order_D=tm_df_.merge(order_df,how='left',on='ID_ORDER')
+            order_D_=order_D[['ID_ORDER','TÊN_HANDPICK','Tình_trạng']]
         return new_status,order_df_f,order_D_
 st.set_page_config(layout='wide')
 st.markdown("<h1 style='text-align: center; color: blue;font-style:bold'>OPERATION DASHBOARD</h1>", unsafe_allow_html=True)
