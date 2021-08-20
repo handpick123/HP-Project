@@ -116,7 +116,7 @@ def main():
             order_df=list[1]
             order_df=order_df.drop(columns={'ID','Descriptions'})
 
-            st.dataframe(order_df.style.applymap(color_survived, subset=['Tình_trạng']))
+            
 
 #             st.dataframe(order_df.style.applymap(styler, subset=['Tình trạng']))
 
@@ -143,7 +143,7 @@ def main():
                 or_result[['Tình_trạng','Bộ_Phận']]=or_result[['Tình_trạng','Bộ_Phận']].fillna(value='0. Chưa cập nhật')
                 list_bp=sorted(or_result['Bộ_Phận'].unique().tolist())
                 st.markdown('')
-                st.write(or_result)
+                st.dataframe(or_result.style.applymap(color_survived, subset=['Tình_trạng']))
             r3_1,r3_2,r3_3,r3_4=st.columns((1.25,1.25,1,1))
             for l in range(0,round(len(list_bp)/2)):
                 with r3_1:
