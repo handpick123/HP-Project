@@ -61,7 +61,7 @@ def created_data():
         data_v3=data_v2.replace("",np.nan).ffill(axis = 0).reset_index()
         data_v=data_v3.merge(process_syntax,how='left',on='Thao_tác_của_bạn')
         data_v4=data_v[data_v['Bộ_phận'].str.contains('D')==False]
-        data_v4['ID_ORDER']=data_v4.astype('str')
+        # data_v4['ID_ORDER']=data_v4.astype('str')
 
         list_order=data_v4['ID_ORDER'].unique().tolist()
         _list={}
