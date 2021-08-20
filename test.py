@@ -51,6 +51,7 @@ def created_data():
         data_df=data.stack().reset_index().rename(columns={'level_2':'state'})
         data_df=data_df.replace("",np.nan)
         data_df=data_df.loc[data_df['QUÉT_MÃ_ĐHM'].isnull()==False ]
+        data_df['QUÉT_MÃ_ĐHM']=data_df['QUÉT_MÃ_ĐHM'].astype('str')
 
         data_v1=data_df.copy()
         data_v1[['BỘ_PHẬN', 'ID','NHÀ_MÁY']] = data_v1['Thao_tác_của_bạn'].str.split('-', 2, expand=True)
