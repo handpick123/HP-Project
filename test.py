@@ -103,7 +103,7 @@ st.markdown("<h1 style='text-align: center; color: blue;font-style:bold'>OPERATI
 st.markdown("<h4 style='text-align: right; color:black;font-style: italic'> Created by HTL</h4>", unsafe_allow_html=True)
 st.markdown("")
 def color_survived(val):
-    color = 'red' if val==0 else 'yellow' if val==1 else 'green'
+    color = 'red' if val=='Tạm ngưng' else 'yellow' if val=='BOM thiếu/sai' else 'green'
     return f'background-color: {color}'
 
 def main():
