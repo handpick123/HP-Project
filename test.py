@@ -122,7 +122,7 @@ def main():
             order_df=list[1]
             order_df=order_df.drop(columns={'ID','Descriptions'})
 
-            st.dataframe(order_df.style.applymap(color_survived, subset=['Tình_trạng']))
+            st.dataframe(order_df.style.applymap(styler, subset=['Tình_trạng']))
 
 #             st.dataframe(order_df.style.applymap(styler, subset=['Tình trạng']))
 
