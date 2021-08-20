@@ -30,8 +30,7 @@ def created_data():
         order_=pd.DataFrame(order)
         order_=order_.drop(columns={'KHÁCH HÀNG','NHÓM','ĐVT','QUI CÁCH','ĐÓNG GÓI','LOẠI QC','GHI CHÚ','NMSX','LOẠI HÀNG','GỖ','SƠN','NỆM','TÊN TTF','NGÀY LẬP','SỐ ĐƠN HÀNG'},axis=0)
         order_['S/L']=order_['S/L'].astype('str')
-        order_df['ID ORDER']=order_df['ID ORDER'].astype('str')
-        order_df.columns=order_df.columns.str.replace(" ","_")       
+        order_['ID ORDER']=order_['ID ORDER'].astype('str')
         order_.columns=order_.columns.str.replace(" ","_")    
         order_['Order Category 3']=order_['KHUNG']+order_['KIM_LOẠI']+order_['VENEER']
         sub_order=order_[['ID_ORDER','Order Category 3']]
