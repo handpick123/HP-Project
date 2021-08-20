@@ -30,6 +30,8 @@ def created_data():
         order_=pd.DataFrame(order)
         order_=order_.drop(columns={'KHÁCH HÀNG','NHÓM','ĐVT','QUI CÁCH','ĐÓNG GÓI','LOẠI QC','GHI CHÚ','NMSX','LOẠI HÀNG','GỖ','SƠN','NỆM','TÊN TTF','NGÀY LẬP','SỐ ĐƠN HÀNG'},axis=0)
         order_['S/L']=order_['S/L'].astype('str')
+        order_df['ID ORDER']=order_df['ID ORDER'].astype('str')
+        order_df.columns=order_df.columns.str.replace(" ","_")       
         order_.columns=order_.columns.str.replace(" ","_")    
         order_['Order Category 3']=order_['KHUNG']+order_['KIM_LOẠI']+order_['VENEER']
         sub_order=order_[['ID_ORDER','Order Category 3']]
@@ -37,8 +39,7 @@ def created_data():
         sub_order_=sub_order_[['ID_ORDER','ID','Descriptions']]
         order_df=order_.merge(sub_order_,how='left',on='ID_ORDER')
         order_df=order_df[['ID_ORDER','TÊN_HANDPICK','S/L','NGÀY_XUẤT','ID','Descriptions']]
-        order_df['S/L']=order_df['S/L'].astype('str')
-        order_df['ID_ORDER']=order_df['ID_ORDER'].astype('str')
+
 
         sh3=gc1.open('HP - Hist').worksheet('Form')
         Form=sh3.get_all_records()
@@ -51,7 +52,6 @@ def created_data():
         data_df=data.stack().reset_index().rename(columns={'level_2':'state'})
         data_df=data_df.replace("",np.nan)
         data_df=data_df.loc[data_df['QUÉT_MÃ_ĐHM'].isnull()==False ]
-        data_df['QUÉT_MÃ_ĐHM']=data_df['QUÉT_MÃ_ĐHM'].astype('str')
 
         data_v1=data_df.copy()
         data_v1[['BỘ_PHẬN', 'ID','NHÀ_MÁY']] = data_v1['Thao_tác_của_bạn'].str.split('-', 2, expand=True)
