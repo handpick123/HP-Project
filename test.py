@@ -37,6 +37,8 @@ def created_data():
         sub_order_=sub_order_[['ID_ORDER','ID','Descriptions']]
         order_df=order_.merge(sub_order_,how='left',on='ID_ORDER')
         order_df=order_df[['ID_ORDER','TÊN_HANDPICK','S/L','NGÀY_XUẤT','ID','Descriptions']]
+        order_df['S/L']=order_df['S/L'].astype('str')
+        order_df['ID_ORDER']=order_df['ID_ORDER'].astype('str')
 
         sh3=gc1.open('HP - Hist').worksheet('Form')
         Form=sh3.get_all_records()
