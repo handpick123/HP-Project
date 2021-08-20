@@ -7,12 +7,11 @@ import pandas as pd #-> Để update data dạng bản
 from oauth2client.service_account import ServiceAccountCredentials #-> Để nhập Google Spreadsheet Credentials
 import seaborn as sns
 def created_data():
-
-## Collect QR scan database from Googlesheet
-        scope = ['https://spreadsheets.google.com/feeds',
-                'https://www.googleapis.com/auth/drive']
-        credentials = ServiceAccountCredentials.from_json_keyfile_name(
-            'speedy-precept-314204-30d59f2d7609.json', scope)
+                ## Collect QR scan database from Googlesheet
+        credentials = service_account.Credentials.from_service_account_info(
+            st.secrets["gcp_service_account"],
+            scopes=['https://spreadsheets.google.com/feeds',
+                'https://www.googleapis.com/auth/drive'],)
         gc1 = gspread.authorize(credentials)
         spreadsheet_key = '1VakpJ7a7o1Eosyh-wto80X0TrkTYSxfaEwNoza3KlLw' # input SPREADSHEET_KEY HERE
 
