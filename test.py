@@ -102,7 +102,16 @@ st.set_page_config(layout='wide')
 st.markdown("<h1 style='text-align: center; color: blue;font-style:bold'>OPERATION DASHBOARD</h1>", unsafe_allow_html=True)
 st.markdown("<h4 style='text-align: right; color:black;font-style: italic'> Created by HTL</h4>", unsafe_allow_html=True)
 st.markdown("")
+def styler(col):
+    # We only want to apply style to the Type column
+    if col.name != 'Tình_trạng':
+        return [''] * len(col)
 
+    bg_color = col.map({
+        'ngưng': 'yellow',
+        'sai': 'green',
+    }).fillna('') # a fallback for fruits we haven't colorized
+    return 'background-color:' + bg_color
 def main():
     username = st.sidebar.text_input("User Name")
     password = st.sidebar.text_input("Password",type='password')
@@ -112,16 +121,7 @@ def main():
             last_status=list[0]
             order_df=list[1]
             order_df=order_df.drop(columns={'ID','Descriptions'})
-            def styler(col):
-                # We only want to apply style to the Type column
-                if col.name != 'Tình_trạng':
-                    return [''] * len(col)
 
-                bg_color = col.map({
-                    'ngưng': 'yellow',
-                    'sai': 'green',
-                }).fillna('') # a fallback for fruits we haven't colorized
-                return 'background-color:' + bg_color
 
             order_df=order_df.style.apply(styler)
 
