@@ -112,6 +112,19 @@ def main():
             last_status=list[0]
             order_df=list[1]
             order_df=order_df.drop(columns={'ID','Descriptions'})
+            def styler(col):
+                # We only want to apply style to the Type column
+                if col.name != 'Tình_trạng':
+                    return [''] * len(col)
+
+                bg_color = col.map({
+                    'ngưng': 'yellow',
+                    'sai': 'green',
+                }).fillna('') # a fallback for fruits we haven't colorized
+                return 'background-color:' + bg_color
+
+            order_df=order_df.style.apply(styler)
+
             D=list[2]
             c1_1,c1_2=st.columns((2.5,2))
             c1,c2,c3 = st.columns((1.125,1.125,1.75))
