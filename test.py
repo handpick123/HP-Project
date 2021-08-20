@@ -106,9 +106,9 @@ st.markdown("")
 #     color = 'red' if val==0 else 'yellow' if val==1 else 'green'
 #     return f'background-color: {color}'
 def color_survived(s):        
-    if s['Tình_trạng'].str.contains('đợi')== True:
+    if s.str.contains('đợi')== True:
         return 'background-color: green'
-    elif s['Tình_trạng'].str.contains('ngưng')== rue:
+    elif s.str.contains('ngưng')== rue:
         return 'background-color: red'
 def main():
     username = st.sidebar.text_input("User Name")
