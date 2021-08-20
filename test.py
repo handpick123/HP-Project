@@ -123,7 +123,7 @@ def main():
             order_df=order_df.drop(columns={'ID','Descriptions'})
 
 
-            order_df=order_df.style.apply(styler)
+            st.dataframe(order_df.style.apply(styler))
 
             D=list[2]
             c1_1,c1_2=st.columns((2.5,2))
