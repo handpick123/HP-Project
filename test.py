@@ -102,14 +102,10 @@ st.set_page_config(layout='wide')
 st.markdown("<h1 style='text-align: center; color: blue;font-style:bold'>OPERATION DASHBOARD</h1>", unsafe_allow_html=True)
 st.markdown("<h4 style='text-align: right; color:black;font-style: italic'> Created by HTL</h4>", unsafe_allow_html=True)
 st.markdown("")
-# def color_survived(val):
-#     color = 'red' if val==0 else 'yellow' if val==1 else 'green'
-#     return f'background-color: {color}'
-def color_survived(s):        
-    if s.str.contains('đợi')== True:
-        return 'background-color: green'
-    elif s.str.contains('ngưng')== rue:
-        return 'background-color: red'
+def color_survived(val):
+    color = 'red' if val==0 else 'yellow' if val==1 else 'green'
+    return f'background-color: {color}'
+
 def main():
     username = st.sidebar.text_input("User Name")
     password = st.sidebar.text_input("Password",type='password')
