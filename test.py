@@ -98,8 +98,7 @@ def created_data():
         tm_df_=pd.DataFrame.from_dict(tm_df, orient='index').reset_index()
         tm_df_=tm_df_.rename(columns={'index':'ID_ORDER','Bước':'STEP'})
         order_D=tm_df_.merge(order_df,how='left',on='ID_ORDER')
-        order_D
-        # order_D_=order_D[['ID_ORDER','TÊN_HANDPICK','Tình_trạng','Chi_tiết']]
+        order_D_=order_D[['ID_ORDER','TÊN_HANDPICK','Tình_trạng','NCC']]
 
         spreadsheet_key = '1DHvhU43JWaeODEUGel9JknkgVJWBen1RNtzRhViq93g' # input SPREADSHEET_KEY HERE
         sh = gc1.open_by_key(spreadsheet_key)
