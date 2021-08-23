@@ -4,6 +4,7 @@ from datetime import datetime as dt #-> Để xử lý data dạng datetime
 import gspread #-> Để update data lên Google Spreadsheet
 import numpy as np
 import pandas as pd #-> Để update data dạng bản
+from gspread_dataframe import set_with_dataframe #-> Để update data lên Google Spreadsheet
 from oauth2client.service_account import ServiceAccountCredentials #-> Để nhập Google Spreadsheet Credentials
 import seaborn as sns
 def created_data():
@@ -97,12 +98,31 @@ def created_data():
         tm_df_=tm_df_.rename(columns={'index':'ID_ORDER','Bước':'STEP'})
         order_D=tm_df_.merge(order_df,how='left',on='ID_ORDER')
         order_D_=order_D[['ID_ORDER','TÊN_HANDPICK','Tình_trạng']]
+
+        spreadsheet_key = '1DHvhU43JWaeODEUGel9JknkgVJWBen1RNtzRhViq93g' # input SPREADSHEET_KEY HERE
+        sh = gc1.open_by_key(spreadsheet_key)
+        # ACCES GOOGLE SHEET
+        sheet_index_no1 = 3
+
+        worksheet1 = sh.get_worksheet(sheet_index_no1)#-> 0 - first sheet, 1 - second sheet etc. 
+
+        set_with_dataframe(worksheet1, order_D_) #-> Upload user_df vào Sheet đầu tiên trong Spreadsheet
+
         return new_status,order_df_f,order_D_
 st.set_page_config(layout='wide')
 st.markdown("<h1 style='text-align: center; color: blue;font-style:bold'>OPERATION DASHBOARD</h1>", unsafe_allow_html=True)
 st.markdown("<h4 style='text-align: right; color:black;font-style: italic'> Created by HTL</h4>", unsafe_allow_html=True)
 st.markdown("")
+def styler(col):
+    # We only want to apply style to the Type column
+    if col.name != 'Tình_trạng':
+        return [''] * len(col)
 
+    bg_color = col.map({
+        'ngưng': 'yellow',
+        'sai': 'green',
+    }).fillna('') # a fallback for fruits we haven't colorized
+    return 'background-color:' + bg_color
 def main():
     username = st.sidebar.text_input("User Name")
     password = st.sidebar.text_input("Password",type='password')
@@ -112,6 +132,10 @@ def main():
             last_status=list[0]
             order_df=list[1]
             order_df=order_df.drop(columns={'ID','Descriptions'})
+
+
+            order_df=order_df.style.apply(styler)
+
             D=list[2]
             c1_1,c1_2=st.columns((2.5,2))
             c1,c2,c3 = st.columns((1.125,1.125,1.75))
