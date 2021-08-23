@@ -113,10 +113,9 @@ st.set_page_config(layout='wide')
 st.markdown("<h1 style='text-align: center; color: blue;font-style:bold'>OPERATION DASHBOARD</h1>", unsafe_allow_html=True)
 st.markdown("<h4 style='text-align: right; color:black;font-style: italic'> Created by HTL</h4>", unsafe_allow_html=True)
 st.markdown("")
-def styler(col):
-    # We only want to apply style to the Type column
-    if col.name != 'Tình_trạng':
-        return [''] * len(col)
+def color_survived(val):
+    color = 'red' if val=='Tạm ngưng' else 'yellow' if val=='BOM thiếu/sai' else 'green'
+    return f'background-color: {color}'
 
     bg_color = col.map({
         'ngưng': 'yellow',
@@ -133,8 +132,9 @@ def main():
             order_df=list[1]
             order_df=order_df.drop(columns={'ID','Descriptions'})
 
+            
 
-            order_df=order_df.style.apply(styler)
+#             st.dataframe(order_df.style.applymap(styler, subset=['Tình trạng']))
 
             D=list[2]
             c1_1,c1_2=st.columns((2.5,2))
@@ -159,7 +159,7 @@ def main():
                 or_result[['Tình_trạng','Bộ_Phận']]=or_result[['Tình_trạng','Bộ_Phận']].fillna(value='0. Chưa cập nhật')
                 list_bp=sorted(or_result['Bộ_Phận'].unique().tolist())
                 st.markdown('')
-                st.write(or_result)
+                st.dataframe(or_result.style.applymap(color_survived, subset=['Tình_trạng']))
             r3_1,r3_2,r3_3,r3_4=st.columns((1.25,1.25,1,1))
             for l in range(0,round(len(list_bp)/2)):
                 with r3_1:
