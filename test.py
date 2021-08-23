@@ -102,7 +102,7 @@ def created_data():
         spreadsheet_key = '1lMKtg7z1QpM_D2fnLfaegZ9vOXrWcYcm6PDllmg_KY4' # input SPREADSHEET_KEY HERE
         sh = gc1.open_by_key(spreadsheet_key)
         # ACCES GOOGLE SHEET
-        sheet_index_no1 = 3
+        sheet_index_no1 = 0
 
         worksheet1 = sh.get_worksheet(sheet_index_no1)#-> 0 - first sheet, 1 - second sheet etc. 
 
