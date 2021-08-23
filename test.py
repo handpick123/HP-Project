@@ -99,10 +99,10 @@ def created_data():
         order_D=tm_df_.merge(order_df,how='left',on='ID_ORDER')
         order_D_=order_D[['ID_ORDER','TÊN_HANDPICK','Tình_trạng']]
 
-        spreadsheet_key = '1lMKtg7z1QpM_D2fnLfaegZ9vOXrWcYcm6PDllmg_KY4' # input SPREADSHEET_KEY HERE
+        spreadsheet_key = '1DHvhU43JWaeODEUGel9JknkgVJWBen1RNtzRhViq93g' # input SPREADSHEET_KEY HERE
         sh = gc1.open_by_key(spreadsheet_key)
         # ACCES GOOGLE SHEET
-        sheet_index_no1 = 0
+        sheet_index_no1 = 3
 
         worksheet1 = sh.get_worksheet(sheet_index_no1)#-> 0 - first sheet, 1 - second sheet etc. 
 
