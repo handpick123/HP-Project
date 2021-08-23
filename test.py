@@ -156,7 +156,9 @@ def main():
                 list_bp=sorted(or_result['Bộ_Phận'].unique().tolist())
                 st.markdown('')
                 st.dataframe(or_result.style.applymap(color_survived, subset=['Tình_trạng']))
-                D
+                st.markdown("<h4 style='text-align: left; color: blue;font-style:bold'>D. Thu mua</h1>",unsafe_allow_html=True)
+
+                D   
             r3_1,r3_2,r3_3,r3_4=st.columns((1.25,1.25,1,1))
             for l in range(0,round(len(list_bp)/2)):
                 with r3_1:
@@ -165,7 +167,6 @@ def main():
                     bp_df=or_result[or_result['Bộ_Phận']==list_bp[l]].reset_index()
                     bp_df_=bp_df[['ID_ORDER','TÊN_HANDPICK','Tình_trạng']]
                     bp_df_
-                    st.markdown("<h4 style='text-align: left; color: blue;font-style:bold'>D. Thu mua</h1>",unsafe_allow_html=True)
                     
             for m in range(round(len(list_bp)/2),len(list_bp)):
                 with r3_2:
