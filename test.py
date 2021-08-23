@@ -92,12 +92,13 @@ def created_data():
             tm_list[j]['Thời_gian']=D_.loc[D_.ID_ORDER==j]['Dấu_thời_gian'].to_list()
             tm_list[j]['Bộ_Phận']=D_.loc[D_.ID_ORDER==j]['Bộ_phận'].to_list()
             tm_list[j]['Tình_trạng']=D_.loc[D_.ID_ORDER==j]['Mô_Tả'].to_list()     
+            tm_list[j]['NCC']=D_.loc[D_.ID_ORDER==j]['Chi_tiết'].to_list()     
 
         tm_df={k2:{sk2:sv2[-1] for sk2,sv2 in s2.items() if len(sv2)>0} for k2,s2 in tm_list.items() }
         tm_df_=pd.DataFrame.from_dict(tm_df, orient='index').reset_index()
         tm_df_=tm_df_.rename(columns={'index':'ID_ORDER','Bước':'STEP'})
         order_D=tm_df_.merge(order_df,how='left',on='ID_ORDER')
-        order_D_=order_D[['ID_ORDER','TÊN_HANDPICK','Tình_trạng']]
+        order_D_=order_D[['ID_ORDER','TÊN_HANDPICK','Tình_trạng','Chi_tiết']]
 
         spreadsheet_key = '1DHvhU43JWaeODEUGel9JknkgVJWBen1RNtzRhViq93g' # input SPREADSHEET_KEY HERE
         sh = gc1.open_by_key(spreadsheet_key)
