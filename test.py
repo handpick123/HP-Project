@@ -127,7 +127,7 @@ def main():
     username = st.sidebar.text_input("User Name")
     password = st.sidebar.text_input("Password",type='password')
     if st.sidebar.checkbox("Login"):
-        if  password==st.secrets["passwords"]:
+        if  password==st.secrets["passwords"] and username==st.secrets['user']:
             list=created_data()
             last_status=list[0]
             order_df=list[1]
