@@ -127,7 +127,7 @@ def main():
     username = st.sidebar.text_input("User Name")
     password = st.sidebar.text_input("Password",type='password')
     if st.sidebar.checkbox("Login"):
-        if password == '7611':
+        if  password==st.secrets["passwords"]:
             list=created_data()
             last_status=list[0]
             order_df=list[1]
@@ -158,7 +158,6 @@ def main():
                 st.markdown('')
                 st.dataframe(or_result.style.applymap(color_survived, subset=['Tình_trạng']))
                 st.markdown("<h4 style='text-align: left; color: blue;font-style:bold'>D. Thu mua</h1>",unsafe_allow_html=True)
-
                 D   
             r3_1,r3_2,r3_3,r3_4=st.columns((1.25,1.25,1,1))
             for l in range(0,round(len(list_bp)/2)):
