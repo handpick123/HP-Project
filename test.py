@@ -38,7 +38,7 @@ def created_data():
         sub_order_=sub_order_[['ID_ORDER','ID','Descriptions']]
         order_df=order_.merge(sub_order_,how='left',on='ID_ORDER')
         order_df=order_df[['ID_ORDER','TÊN_HANDPICK','S/L','NGÀY_XUẤT','ID','Descriptions']]
-
+        order_df=order_df.rename(columns={'Descriptions':'Loại ĐH'})
 
         sh3=gc1.open('HP - Hist').worksheet('Form')
         Form=sh3.get_all_records()
@@ -72,7 +72,7 @@ def created_data():
             _list[i]['Bộ_Phận']=data_v4.loc[data_v4.ID_ORDER==i]['Bộ_phận'].to_list()
             _list[i]['Tình_trạng']=data_v4.loc[data_v4.ID_ORDER==i]['Mô_Tả'].to_list()
             # _list[i]['Nhóm_ĐH']=data_v4.loc[data_v4.ID_ORDER==i]['Order Category 1'].to_list()
-            _list[i]['Nhóm_ThuMua']=data_v4.loc[data_v4.ID_ORDER==i]['Descriptions'].to_list()
+            # _list[i]['Nhóm_ThuMua']=data_v4.loc[data_v4.ID_ORDER==i]['Descriptions'].to_list()
             _list[i]['Nhà_máy']=data_v4.loc[data_v4.ID_ORDER==i]['NHÀ_MÁY'].to_list()
 
         new_={k:{sk:sv[-1] for sk,sv in s.items() if len(sv)>0} for k,s in _list.items() }
@@ -131,7 +131,7 @@ def main():
             list=created_data()
             last_status=list[0]
             order_df=list[1]
-            order_df=order_df.drop(columns={'ID','Descriptions'})
+            order_df=order_df.drop(columns={'ID'})
 
             D=list[2]
             c1_1,c1_2=st.columns((2.5,2))
