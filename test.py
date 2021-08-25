@@ -96,11 +96,12 @@ def created_data():
             tm_list[j]['Thời_gian']=D_.loc[D_.ID_ORDER==j]['Dấu_thời_gian'].to_list()
             tm_list[j]['Bộ_Phận']=D_.loc[D_.ID_ORDER==j]['Bộ_phận'].to_list()
             tm_list[j]['Tình_trạng']=D_.loc[D_.ID_ORDER==j]['Mô_Tả'].to_list()     
+
         tm_df={k2:{sk2:sv2[-1] for sk2,sv2 in s2.items() if len(sv2)>0} for k2,s2 in tm_list.items() }
         tm_df_=pd.DataFrame.from_dict(tm_df, orient='index').reset_index()
         tm_df_=tm_df_.rename(columns={'index':'ID_ORDER','Bước':'STEP'})
         order_D=tm_df_.merge(order_df,how='left',on='ID_ORDER')
-        order_D_=order_D[['ID_ORDER','TÊN_HANDPICK','Tình_trạng','Bộ_Phận']]
+        order_D_=order_D[['ID_ORDER','Thời_gian','TÊN_HANDPICK','Tình_trạng','Bộ_Phận']]
         order_tm=order_D_.merge(ncc_,how='left',on='ID_ORDER')
         order_tm['Chi_tiết']=order_tm['Chi_tiết'].replace(np.nan,'Chưa cập nhật')
         order_tm=order_tm.rename(columns={'Chi_tiết':'NCC'})
@@ -130,10 +131,10 @@ def color_survived(val):
 def download_link(object_to_download, download_filename, download_link_text):
 
     if isinstance(object_to_download,pd.DataFrame):
-        object_to_download = object_to_download.to_csv(index=False)
-
+        object_to_download = object_to_download.to_csv(index = False, header=True,encoding="cp1258")
+            
     # some strings <-> bytes conversions necessary here
-    b64 = base64.b64encode(object_to_download.encode()).decode()
+        b64 = base64.b64encode(object_to_download.encode()).decode()
 
     return f'<a href="data:file/txt;base64,{b64}" download="{download_filename}">{download_link_text}</a>'
 
@@ -150,7 +151,7 @@ def main():
 
             D=list[2]
             c1_1,c1_2=st.columns((2.5,2))
-            c1,c2,c3 = st.columns((1.125,1.125,1.75))
+            c1,c2,c3,C4= st.columns((.833,.833,.833,1.75))
             with c1_2:
                 st.markdown('### B. TIẾN ĐỘ CHUNG')
             with c1_1:
@@ -192,12 +193,14 @@ def main():
                     bp_df_
             with c2:
                 cho=st.selectbox('Chọn danh sách cần tải',['ĐH đang tạm ngừng','ĐH đang thiếu/sai','ĐH đang triển khai'])
+            with c3:
                 if cho=='ĐH đang tạm ngừng':
                     file=or_result[or_result['Tình_trạng'].str.contains('Tạm ngưng')]
                 elif cho=='ĐH đang thiếu/sai':
                     file=or_result[or_result['Tình_trạng'].str.contains('thiếu/sai')]
                 else:
                     file=or_result[or_result['Tình_trạng'].str.contains('đang')]
+                st.markdown("")
                 tmp_download_link = download_link(file, 'YOUR_DF.csv', 'Bấm vào đây để tải danh sách!')
                 st.markdown(tmp_download_link, unsafe_allow_html=True)
         else:
