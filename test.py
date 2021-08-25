@@ -197,7 +197,7 @@ def main():
                     file=or_result[or_result['Tình_trạng'].str.contains('thiếu/sai')]
                 else:
                     file=or_result[or_result['Tình_trạng'].str.contains('đang')]
-                tmp_download_link = download_link(or_result, 'YOUR_DF.csv', 'Click here to download your data!')
+                tmp_download_link = download_link(file, 'YOUR_DF.csv', 'Click here to download your data!')
                 st.markdown(tmp_download_link, unsafe_allow_html=True)
         else:
             st.warning("Incorrect Username/Password")
