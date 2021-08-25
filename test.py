@@ -7,6 +7,8 @@ import pandas as pd #-> Để update data dạng bản
 from gspread_dataframe import set_with_dataframe #-> Để update data lên Google Spreadsheet
 from oauth2client.service_account import ServiceAccountCredentials #-> Để nhập Google Spreadsheet Credentials
 import seaborn as sns
+import base64
+from io import BytesIO
 def created_data():
                 ## Collect QR scan database from Googlesheet
         credentials = service_account.Credentials.from_service_account_info(
@@ -116,7 +118,7 @@ st.markdown("<h1 style='text-align: center; color: blue;font-style:bold'>OPERATI
 st.markdown("<h4 style='text-align: right; color:black;font-style: italic'> Created by HTL</h4>", unsafe_allow_html=True)
 st.markdown("")
 def color_survived(val):
-    color = 'red' if val=='Tạm ngưng' else 'yellow' if val=='BOM thiếu/sai' else 'green'
+    color = 'red' if val=='Tạm ngưng' else 'yellow' if val=='BOM thiếu/sai' else 'white'
     return f'background-color: {color}'
 
     bg_color = col.map({
@@ -124,6 +126,17 @@ def color_survived(val):
         'sai': 'green',
     }).fillna('') # a fallback for fruits we haven't colorized
     return 'background-color:' + bg_color
+def download_link(object_to_download, download_filename, download_link_text):
+
+    if isinstance(object_to_download,pd.DataFrame):
+        object_to_download = object_to_download.to_csv(index=False)
+
+    # some strings <-> bytes conversions necessary here
+    b64 = base64.b64encode(object_to_download.encode()).decode()
+
+    return f'<a href="data:file/txt;base64,{b64}" download="{download_filename}">{download_link_text}</a>'
+
+
 def main():
     username = st.sidebar.text_input("User Name")
     password = st.sidebar.text_input("Password",type='password')
@@ -176,6 +189,16 @@ def main():
                     bp_df=or_result[or_result['Bộ_Phận']==list_bp[m]].reset_index()
                     bp_df_=bp_df[['ID_ORDER','TÊN_HANDPICK','Tình_trạng']]
                     bp_df_
+            with c2:
+                cho=st.selectbox('Chọn danh sách cần tải',['ĐH đang tạm ngừng','ĐH đang thiếu/sai','ĐH đang triển khai'])
+                if cho=='ĐH đang tạm ngừng':
+                    file=or_result[or_result['Tình_trạng'].str.contains('Tạm ngưng')]
+                elif cho=='ĐH đang thiếu/sai':
+                    file=or_result[or_result['Tình_trạng'].str.contains('thiếu/sai')]
+                else:
+                    file=or_result[or_result['Tình_trạng'].str.contains('đang')]
+                tmp_download_link = download_link(or_result, 'YOUR_DF.csv', 'Click here to download your data!')
+                st.markdown(tmp_download_link, unsafe_allow_html=True)
         else:
             st.warning("Incorrect Username/Password")
 if __name__=='__main__':
