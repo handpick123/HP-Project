@@ -103,6 +103,7 @@ def created_data():
         order_D_=order_D[['ID_ORDER','TÊN_HANDPICK','Tình_trạng','Bộ_Phận']]
         order_tm=order_D_.merge(ncc_,how='left',on='ID_ORDER')
         order_tm['Chi_tiết']=order_tm['Chi_tiết'].replace(np.nan,'Chưa cập nhật')
+        order_tm=order_tm.rename(columns={'Chi_tiết':'NCC'})
         spreadsheet_key = '1DHvhU43JWaeODEUGel9JknkgVJWBen1RNtzRhViq93g' # input SPREADSHEET_KEY HERE
         sh = gc1.open_by_key(spreadsheet_key)
         # ACCES GOOGLE SHEET
