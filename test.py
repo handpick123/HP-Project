@@ -34,7 +34,7 @@ def created_data():
         order_['S/L']=order_['S/L'].astype('str')
         order_['ID ORDER']=order_['ID ORDER'].astype('str')
         order_.columns=order_.columns.str.replace(" ","_")    
-        order_['Order Category 3']=order_['KHUNG']+order_['KIM_LOẠI']+order_['VENEER-GC_NGOÀI']
+        order_['Order Category 3']=order_['KHUNG']+order_['KIM_LOẠI']+order_['VENEER_-_GC_NGOÀI']
         sub_order=order_[['ID_ORDER','Order Category 3']]
         sub_order_=sub_order.merge(category_df,how='left',on='Order Category 3')
         sub_order_=sub_order_[['ID_ORDER','ID','Descriptions']]
