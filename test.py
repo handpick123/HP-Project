@@ -32,7 +32,7 @@ def created_data():
         order_['S/L']=order_['S/L'].astype('str')
         order_['ID ORDER']=order_['ID ORDER'].astype('str')
         order_.columns=order_.columns.str.replace(" ","_")    
-        order_['Order Category 3']=order_['KHUNG']+order_['KIM_LOẠI']+order_['VENEER']
+        order_['Order Category 3']=order_['KHUNG']+order_['KIM_LOẠI']+order_['VÁN_ÉP']
         sub_order=order_[['ID_ORDER','Order Category 3']]
         sub_order_=sub_order.merge(category_df,how='left',on='Order Category 3')
         sub_order_=sub_order_[['ID_ORDER','ID','Descriptions']]
@@ -61,7 +61,7 @@ def created_data():
         data_v3=data_v2.replace("",np.nan).ffill(axis = 0).reset_index()
         data_v=data_v3.merge(process_syntax,how='left',on='Thao_tác_của_bạn')
         data_v4=data_v[data_v['Bộ_phận'].str.contains('D')==False]
-        # data_v4['ID_ORDER']=data_v4.astype('str')
+                # data_v4['ID_ORDER']=data_v4.astype('str')
 
         list_order=data_v4['ID_ORDER'].unique().tolist()
         _list={}
@@ -71,8 +71,7 @@ def created_data():
             _list[i]['Bước']=data_v4.loc[data_v4.ID_ORDER==i]['BỘ_PHẬN'].to_list()
             _list[i]['Bộ_Phận']=data_v4.loc[data_v4.ID_ORDER==i]['Bộ_phận'].to_list()
             _list[i]['Tình_trạng']=data_v4.loc[data_v4.ID_ORDER==i]['Mô_Tả'].to_list()
-            # _list[i]['Nhóm_ĐH']=data_v4.loc[data_v4.ID_ORDER==i]['Order Category 1'].to_list()
-            # _list[i]['Nhóm_ThuMua']=data_v4.loc[data_v4.ID_ORDER==i]['Descriptions'].to_list()
+
             _list[i]['Nhà_máy']=data_v4.loc[data_v4.ID_ORDER==i]['NHÀ_MÁY'].to_list()
 
         new_={k:{sk:sv[-1] for sk,sv in s.items() if len(sv)>0} for k,s in _list.items() }
@@ -84,7 +83,10 @@ def created_data():
         new_status=new_status.rename(columns={'index':'ID_ORDER','Bước':'STEP'})
         order_df_=order_df.merge(new_status,how='left',on='ID_ORDER')
         order_df_f=order_df_.drop(columns={'Thời_gian','STEP','NGÀY_XUẤT'})
-        D_=data_v.loc[data_v['Bộ_phận'].str.contains('D')==True]
+        D_=data_v.loc[(data_v['Bộ_phận'].str.contains('D')==True)| (data_v['Thao_tác_của_bạn'].str.contains('VN')==True)].sort_values(by=['ID_ORDER','Dấu_thời_gian'])
+
+        ncc_=D_[D_['Thao_tác_của_bạn'].str.contains('CF')]
+        ncc_=ncc_[['ID_ORDER','Chi_tiết']].drop_duplicates()
         tm_order=D_['ID_ORDER'].unique().tolist()
         tm_list={}
         for j in tm_order:
@@ -92,14 +94,13 @@ def created_data():
             tm_list[j]['Thời_gian']=D_.loc[D_.ID_ORDER==j]['Dấu_thời_gian'].to_list()
             tm_list[j]['Bộ_Phận']=D_.loc[D_.ID_ORDER==j]['Bộ_phận'].to_list()
             tm_list[j]['Tình_trạng']=D_.loc[D_.ID_ORDER==j]['Mô_Tả'].to_list()     
-            tm_list[j]['NCC']=D_.loc[D_.ID_ORDER==j]['Chi_tiết'].to_list()     
-
         tm_df={k2:{sk2:sv2[-1] for sk2,sv2 in s2.items() if len(sv2)>0} for k2,s2 in tm_list.items() }
         tm_df_=pd.DataFrame.from_dict(tm_df, orient='index').reset_index()
         tm_df_=tm_df_.rename(columns={'index':'ID_ORDER','Bước':'STEP'})
         order_D=tm_df_.merge(order_df,how='left',on='ID_ORDER')
-        order_D_=order_D[['ID_ORDER','TÊN_HANDPICK','Tình_trạng','NCC']]
-
+        order_D_=order_D[['ID_ORDER','TÊN_HANDPICK','Tình_trạng','Bộ_Phận']]
+        order_tm=order_D_.merge(ncc_,how='left',on='ID_ORDER')
+        order_tm['Chi_tiết']=order_tm['Chi_tiết'].replace(np.nan,'Chưa cập nhật')
         spreadsheet_key = '1DHvhU43JWaeODEUGel9JknkgVJWBen1RNtzRhViq93g' # input SPREADSHEET_KEY HERE
         sh = gc1.open_by_key(spreadsheet_key)
         # ACCES GOOGLE SHEET
@@ -107,9 +108,9 @@ def created_data():
 
         worksheet1 = sh.get_worksheet(sheet_index_no1)#-> 0 - first sheet, 1 - second sheet etc. 
 
-        set_with_dataframe(worksheet1, order_D) #-> Upload user_df vào Sheet đầu tiên trong Spreadsheet
+        set_with_dataframe(worksheet1, order_tm) #-> Upload user_df vào Sheet đầu tiên trong Spreadsheet
 
-        return new_status,order_df_f,order_D_
+        return new_status,order_df_f,order_tm
 st.set_page_config(layout='wide')
 st.markdown("<h1 style='text-align: center; color: blue;font-style:bold'>OPERATION DASHBOARD</h1>", unsafe_allow_html=True)
 st.markdown("<h4 style='text-align: right; color:black;font-style: italic'> Created by HTL</h4>", unsafe_allow_html=True)
