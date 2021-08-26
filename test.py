@@ -129,26 +129,16 @@ def color_survived(val):
         'sai': 'green',
     }).fillna('') # a fallback for fruits we haven't colorized
     return 'background-color:' + bg_color
+def download_link(object_to_download, download_filename, download_link_text):
 
+    if isinstance(object_to_download,pd.DataFrame):
+        object_to_download = object_to_download.to_csv(index = False, header=True,encoding="cp1258")
+            
+    # some strings <-> bytes conversions necessary here
+        b64 = base64.b64encode(object_to_download.encode()).decode()
 
-def to_excel(df):
-    output = BytesIO()
-    writer = pd.ExcelWriter(output, engine='xlsxwriter')
-    df.to_excel(writer, sheet_name='Sheet1')
-    writer.save()
-    processed_data = output.getvalue()
-    return processed_data
+    return f'<a href="data:file/txt;base64,{b64}" download="{download_filename}">{download_link_text}</a>'
 
-def get_table_download_link(df):
-    """Generates a link allowing the data in a given panda dataframe to be downloaded
-    in:  dataframe
-    out: href string
-    """
-    val = to_excel(df)
-    b64 = base64.b64encode(val.encode()).decode()  # some strings
-
-    href = f'<a href="data:application/octet-stream;base64,{b64.decode()}" download="extract.xlsx">Bấm vào đây để tải danh sách</a>' # decode b'abc' => abc
-    return href
 
 def main():
     username = st.sidebar.text_input("User Name")
@@ -212,7 +202,7 @@ def main():
                 else:
                     file=or_result[or_result['Tình_trạng'].str.contains('đang')]
                 st.markdown("")
-                tmp_download_link = get_table_download_link(file) #, 'YOUR_DF.csv', 'Bấm vào đây để tải danh sách!')
+                tmp_download_link = download_link(file, 'YOUR_DF.csv', 'Bấm vào đây để tải danh sách!')
                 st.markdown(tmp_download_link, unsafe_allow_html=True)
         else:
             st.warning("Incorrect Username/Password")
