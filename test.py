@@ -139,7 +139,7 @@ def download_link(object_to_download, download_filename, download_link_text):
         downloaded_file = object_to_download.to_excel(towrite, encoding='utf-8', index=False, header=True) # write to BytesIO buffer
         towrite.seek(0)  # reset pointer
         b64 = base64.b64encode(towrite.read()).decode() 
-    return f'<a href="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,{b64}" download="myfilename.xlsx">Download excel file</a>'
+    return f'<a href="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,{b64}" download="myfilename.xlsx">Bấm vào đây để tải danh sách về</a>'
 
     # some strings <-> bytes conversions necessary here
         # b64 = base64.b64encode(object_to_download.encode()).decode()
