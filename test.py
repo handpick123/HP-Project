@@ -38,6 +38,7 @@ def created_data():
         sub_order=order_[['ID_ORDER','Order Category 3']]
         sub_order_=sub_order.merge(category_df,how='left',on='Order Category 3')
         sub_order_=sub_order_[['ID_ORDER','ID','Descriptions']]
+
         order_df=order_.merge(sub_order_,how='left',on='ID_ORDER')
         order_df=order_df[['ID_ORDER','TÊN_HANDPICK','S/L','NGÀY_XUẤT','ID','Descriptions']]
         order_df=order_df.rename(columns={'Descriptions':'Loại ĐH'})
@@ -139,6 +140,28 @@ def download_link(object_to_download, download_filename, download_link_text):
     return f'<a href="data:file/txt;base64,{b64}" download="{download_filename}">{download_link_text}</a>'
 
 
+import streamlit as st
+import base64
+from io import BytesIO
+
+def to_excel(df):
+    output = BytesIO()
+    writer = pd.ExcelWriter(output, engine='xlsxwriter')
+    df.to_excel(writer, sheet_name='Sheet1')
+    writer.save()
+    processed_data = output.getvalue()
+    return processed_data
+
+def get_table_download_link(df):
+    """Generates a link allowing the data in a given panda dataframe to be downloaded
+    in:  dataframe
+    out: href string
+    """
+    val = to_excel(df)
+    b64 = base64.b64encode(val)  # val looks like b'...'
+    return f'<a href="data:application/octet-stream;base64,{b64.decode()}" download="extract.xlsx">Bấm vào đây để tải danh sách</a>' # decode b'abc' => abc
+
+
 def main():
     username = st.sidebar.text_input("User Name")
     password = st.sidebar.text_input("Password",type='password')
@@ -201,7 +224,7 @@ def main():
                 else:
                     file=or_result[or_result['Tình_trạng'].str.contains('đang')]
                 st.markdown("")
-                tmp_download_link = download_link(file, 'YOUR_DF.csv', 'Bấm vào đây để tải danh sách!')
+                tmp_download_link = get_table_download_link(file) #, 'YOUR_DF.csv', 'Bấm vào đây để tải danh sách!')
                 st.markdown(tmp_download_link, unsafe_allow_html=True)
         else:
             st.warning("Incorrect Username/Password")
