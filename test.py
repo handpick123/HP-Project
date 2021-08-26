@@ -129,24 +129,6 @@ def color_survived(val):
         'sai': 'green',
     }).fillna('') # a fallback for fruits we haven't colorized
     return 'background-color:' + bg_color
-def download_link(object_to_download, download_filename, download_link_text):
-    if isinstance(object_to_download,pd.DataFrame):
-
-        output = BytesIO()
-        writer = pd.ExcelWriter(output, engine='xlsxwriter')
-        object_to_download.to_excel(writer, sheet_name='Sheet1')
-        writer.save()
-        processed_data = output.getvalue()
-
-    # some strings <-> bytes conversions necessary here
-    b64 = base64.b64encode(processed_data.encode()).decode()
-
-    return f'<a href="data:file/txt;base64,{b64}" download="{download_filename}">{download_link_text}</a>'
-
-
-
-
-
 
 
 def to_excel(df):
@@ -230,7 +212,7 @@ def main():
                 else:
                     file=or_result[or_result['Tình_trạng'].str.contains('đang')]
                 st.markdown("")
-                tmp_download_link = download_link(file, 'YOUR_DF.csv', 'Click here to download your data!')
+                tmp_download_link = get_table_download_link(file) #, 'YOUR_DF.csv', 'Bấm vào đây để tải danh sách!')
                 st.markdown(tmp_download_link, unsafe_allow_html=True)
         else:
             st.warning("Incorrect Username/Password")
