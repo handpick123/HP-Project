@@ -120,6 +120,7 @@ st.set_page_config(layout='wide')
 st.markdown("<h1 style='text-align: center; color: blue;font-style:bold'>OPERATION DASHBOARD</h1>", unsafe_allow_html=True)
 st.markdown("<h4 style='text-align: right; color:black;font-style: italic'> Created by HTL</h4>", unsafe_allow_html=True)
 st.markdown("")
+import io
 def color_survived(val):
     color = 'red' if val=='Tạm ngưng' else 'yellow' if val=='BOM thiếu/sai' else 'white'
     return f'background-color: {color}'
@@ -132,12 +133,18 @@ def color_survived(val):
 def download_link(object_to_download, download_filename, download_link_text):
 
     if isinstance(object_to_download,pd.DataFrame):
-        object_to_download = object_to_download.to_csv(index = False, header=True,encoding="cp1258")
+        # object_to_download = object_to_download.to_excel(index = False, header=True,encoding="cp1258")
             
-    # some strings <-> bytes conversions necessary here
-        b64 = base64.b64encode(object_to_download.encode()).decode()
+        towrite = io.BytesIO()
+        downloaded_file = object_to_download.to_excel(towrite, encoding='utf-8', index=False, header=True) # write to BytesIO buffer
+        towrite.seek(0)  # reset pointer
+        b64 = base64.b64encode(towrite.read()).decode() 
+    return f'<a href="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,{b64}" download="myfilename.xlsx">Download excel file</a>'
 
-    return f'<a href="data:file/txt;base64,{b64}" download="{download_filename}">{download_link_text}</a>'
+    # some strings <-> bytes conversions necessary here
+        # b64 = base64.b64encode(object_to_download.encode()).decode()
+
+    # return f'<a href="data:file/txt;base64,{b64}" download="{download_filename}">{download_link_text}</a>'
 
 
 def main():
