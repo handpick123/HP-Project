@@ -146,8 +146,9 @@ def get_table_download_link(df):
     """
     val = to_excel(df)
     b64 = base64.b64encode(val)  # val looks like b'...'
-    return f'<a href="data:application/octet-stream;base64,{b64.decode()}" download="extract.xlsx">Bấm vào đây để tải danh sách</a>' # decode b'abc' => abc
 
+    href = f'<a href="data:application/octet-stream;base64,{b64.decode()}" download="extract.xlsx">Bấm vào đây để tải danh sách</a>' # decode b'abc' => abc
+    return href
 
 def main():
     username = st.sidebar.text_input("User Name")
