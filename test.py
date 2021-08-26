@@ -145,7 +145,7 @@ def get_table_download_link(df):
     out: href string
     """
     val = to_excel(df)
-    b64 = base64.b64encode(val)  # val looks like b'...'
+    b64 = base64.b64encode(val.encode()).decode()  # some strings
 
     href = f'<a href="data:application/octet-stream;base64,{b64.decode()}" download="extract.xlsx">Bấm vào đây để tải danh sách</a>' # decode b'abc' => abc
     return href
