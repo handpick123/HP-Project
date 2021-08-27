@@ -178,25 +178,27 @@ def main():
                     TM=D[D['ID_ORDER'].str.contains(id_or,na=False)]
                 list_order=or_result['ID_ORDER'].unique().tolist()
                 or_result[['Tình_trạng','Bộ_Phận']]=or_result[['Tình_trạng','Bộ_Phận']].fillna(value='0. Chưa cập nhật')
-                list_bp=sorted(or_result['Bộ_Phận'].unique().tolist())
                 st.markdown('')
                 st.dataframe(or_result.style.applymap(color_survived, subset=['Tình_trạng']))
                 st.markdown("<h4 style='text-align: left; color: blue;font-style:bold'>D. Thu mua</h1>",unsafe_allow_html=True)
                 D   
+
             r3_1,r3_2,r3_3,r3_4=st.columns((1.25,1.25,1,1))
-            for l in range(0,round(len(list_bp)/2)):
+            list_1=['0. Chưa cập nhật','B. PKTH','E. Định hình','G. Sơn','I. Nệm']
+            list_2=['A. Đơn hàng','C. Phôi','F. Nguội','K. QC TP']
+            for l in range(0,round(len(list_1))):
                 with r3_1:
-                    st.markdown("<h4 style='text-align: left; color: blue;font-style:bold'>{}</h1>".format(list_bp[l]),unsafe_allow_html=True)
+                    st.markdown("<h4 style='text-align: left; color: blue;font-style:bold'>{}</h1>".format(list_1[l]),unsafe_allow_html=True)
                     st.markdown('')
-                    bp_df=or_result[or_result['Bộ_Phận']==list_bp[l]].reset_index()
+                    bp_df=or_result[or_result['Bộ_Phận']==list_1[l]].reset_index()
                     bp_df_=bp_df[['ID_ORDER','TÊN_HANDPICK','Tình_trạng']]
                     bp_df_
                     
-            for m in range(round(len(list_bp)/2),len(list_bp)):
+            for m in range(0,round(len(list_2))):
                 with r3_2:
-                    st.markdown("<h4 style='text-align: left; color: blue;font-style:bold'>{}</h1>".format(list_bp[m]),unsafe_allow_html=True)
+                    st.markdown("<h4 style='text-align: left; color: blue;font-style:bold'>{}</h1>".format(list_2[m]),unsafe_allow_html=True)
                     st.markdown('')
-                    bp_df=or_result[or_result['Bộ_Phận']==list_bp[m]].reset_index()
+                    bp_df=or_result[or_result['Bộ_Phận']==list_2[m]].reset_index()
                     bp_df_=bp_df[['ID_ORDER','TÊN_HANDPICK','Tình_trạng']]
                     bp_df_
             with c2:
