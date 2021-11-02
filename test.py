@@ -27,6 +27,7 @@ def created_data():
         sh2=gc1.open('HP - Hist').worksheet('Category')
         category=sh2.get_all_records()
         category_df=pd.DataFrame(category)
+
         sh4=gc1.open('Handpick - Đơn đặt hàng').worksheet('1. DON HANG')
         order=sh4.get_all_records()
         order_=pd.DataFrame(order)
@@ -34,13 +35,14 @@ def created_data():
         order_['S/L']=order_['S/L'].astype('str')
         order_['ID ORDER']=order_['ID ORDER'].astype('str')
         order_.columns=order_.columns.str.replace(" ","_")    
-        order_['Order Category 3']=order_['KHUNG']+order_['KIM_LOẠI']+order_['VENEER_-_GC_NGOÀI']
-        sub_order=order_[['ID_ORDER','Order Category 3']]
-        sub_order_=sub_order.merge(category_df,how='left',on='Order Category 3')
+        order_['ID1']=order_['KHUNG']+order_['KIM_LOẠI']+order_['VENEER_-_GC_NGOÀI']
+        sub_order=order_[['ID_ORDER','ID1']]
+        sub_order_=sub_order.merge(category_df,how='left',on='ID1')
         sub_order_=sub_order_[['ID_ORDER','ID','Descriptions']]
 
         order_df=order_.merge(sub_order_,how='left',on='ID_ORDER')
         order_df=order_df[['ID_ORDER','TÊN_HANDPICK','S/L','NGÀY_XUẤT','ID','Descriptions']]
+
         order_df=order_df.rename(columns={'Descriptions':'Loại ĐH'})
 
         sh3=gc1.open('HP - Hist').worksheet('Form')
@@ -101,6 +103,7 @@ def created_data():
         tm_df={k2:{sk2:sv2[-1] for sk2,sv2 in s2.items() if len(sv2)>0} for k2,s2 in tm_list.items() }
         tm_df_=pd.DataFrame.from_dict(tm_df, orient='index').reset_index()
         tm_df_=tm_df_.rename(columns={'index':'ID_ORDER','Bước':'STEP'})
+
         order_D=tm_df_.merge(order_df,how='left',on='ID_ORDER')
         order_D_=order_D[['ID_ORDER','Thời_gian','TÊN_HANDPICK','Tình_trạng','Bộ_Phận']]
         order_tm=order_D_.merge(ncc_,how='left',on='ID_ORDER')
