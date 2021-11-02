@@ -126,7 +126,7 @@ st.markdown("<h4 style='text-align: right; color:black;font-style: italic'> Crea
 st.markdown("")
 import io
 def color_survived(val):
-    color = 'red' if val=='Đợi' else 'yellow' if val=='BOM thiếu/sai' else 'white'
+    color = 'red' if val=='Đợi' else 'yellow' if val=='BOM thiếu/sai' else 'orange' if val=='Hủy đơn hàng' else 'white'
     return f'background-color: {color}'
 
     bg_color = col.map({
