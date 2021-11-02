@@ -23,7 +23,7 @@ def created_data():
         syntaxs_=sh1.get_all_records()
         syntaxs_df=pd.DataFrame(syntaxs_)
         process_syntax=syntaxs_df #[~syntaxs_df["Step"].str.contains('HP', na=False)]
-
+        # process_syntax
         sh2=gc1.open('HP - Hist').worksheet('Category')
         category=sh2.get_all_records()
         category_df=pd.DataFrame(category)
@@ -49,7 +49,7 @@ def created_data():
         Form=sh3.get_all_records()
         Form_df=pd.DataFrame(Form)
         Form_df.columns=Form_df.columns.str.replace(" ","_")
-
+        # Form_df
         data=Form_df.set_index(['Dấu_thời_gian','Thao_tác_của_bạn'])
         data.columns=data.columns.str.split('-', expand=True)
 
@@ -65,6 +65,7 @@ def created_data():
         data_v2=data_v2.sort_values(by=['ID_ORDER','BỘ_PHẬN','Dấu_thời_gian'])
         data_v3=data_v2.replace("",np.nan).ffill(axis = 0).reset_index()
         data_v=data_v3.merge(process_syntax,how='left',on='Thao_tác_của_bạn')
+        # data_v
         data_v4=data_v[data_v['Bộ_phận'].str.contains('D')==False]
                 # data_v4['ID_ORDER']=data_v4.astype('str')
 
@@ -82,7 +83,7 @@ def created_data():
         new_={k:{sk:sv[-1] for sk,sv in s.items() if len(sv)>0} for k,s in _list.items() }
         new_status=pd.DataFrame.from_dict(new_, orient='index').reset_index()
         new_status['Bước']=new_status['Bước'].astype(str).astype(int)
-
+        # new_status
         new_={k:{sk:sv[-1] for sk,sv in s.items() if len(sv)>0} for k,s in _list.items() }
         new_status=pd.DataFrame.from_dict(new_, orient='index').reset_index()
         new_status=new_status.rename(columns={'index':'ID_ORDER','Bước':'STEP'})
@@ -125,7 +126,7 @@ st.markdown("<h4 style='text-align: right; color:black;font-style: italic'> Crea
 st.markdown("")
 import io
 def color_survived(val):
-    color = 'red' if val=='Tạm ngưng' else 'yellow' if val=='BOM thiếu/sai' else 'white'
+    color = 'red' if val=='Đợi' else 'yellow' if val=='BOM thiếu/sai' else 'white'
     return f'background-color: {color}'
 
     bg_color = col.map({
