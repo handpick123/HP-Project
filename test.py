@@ -126,7 +126,7 @@ st.markdown("<h4 style='text-align: right; color:black;font-style: italic'> Crea
 st.markdown("")
 import io
 def color_survived(val):
-    color = 'red' if val=='Đợi' else 'yellow' if val=='BOM thiếu/sai' else 'orange' if val=='Hủy đơn hàng' else 'white'
+    color = 'orange' if val=='Đợi' else 'yellow' if 'sai' in str(val) or "chưa" in str(val) else 'red' if val=='Hủy đơn hàng' else 'white'
     return f'background-color: {color}'
 
     bg_color = col.map({
@@ -184,27 +184,32 @@ def main():
                 or_result[['Tình_trạng','Bộ_Phận']]=or_result[['Tình_trạng','Bộ_Phận']].fillna(value='0. Chưa cập nhật')
                 st.markdown('')
                 st.dataframe(or_result.style.applymap(color_survived, subset=['Tình_trạng']))
-                st.markdown("<h4 style='text-align: left; color: blue;font-style:bold'>D. Thu mua</h1>",unsafe_allow_html=True)
-                D   
+                st.markdown("**D. Thu mua: {} mã**".format(len(D['ID_ORDER'].tolist()),unsafe_allow_html=True))
+                st.dataframe(D.style.applymap(color_survived, subset=['Tình_trạng']))
+   
 
             r3_1,r3_2,r3_3,r3_4=st.columns((1.25,1.25,1,1))
             list_1=['0. Chưa cập nhật','B. PKTH','E. Định hình','G. Sơn','I. Nệm']
             list_2=['A. Đơn hàng','C. Phôi','F. Nguội','K. QC TP']
             for l in range(0,round(len(list_1))):
                 with r3_1:
-                    st.markdown("<h4 style='text-align: left; color: blue;font-style:bold'>{}</h1>".format(list_1[l]),unsafe_allow_html=True)
-                    st.markdown('')
                     bp_df=or_result[or_result['Bộ_Phận']==list_1[l]].reset_index()
                     bp_df_=bp_df[['ID_ORDER','TÊN_HANDPICK','Tình_trạng']]
-                    bp_df_
+                    st.markdown("**{}: {} mã**".format(list_1[l],len(bp_df_['ID_ORDER'].tolist()),unsafe_allow_html=True))
+                    st.markdown('')
+
+                    st.dataframe(bp_df_.style.applymap(color_survived, subset=['Tình_trạng']))
+
                     
             for m in range(0,round(len(list_2))):
                 with r3_2:
-                    st.markdown("<h4 style='text-align: left; color: blue;font-style:bold'>{}</h1>".format(list_2[m]),unsafe_allow_html=True)
-                    st.markdown('')
                     bp_df=or_result[or_result['Bộ_Phận']==list_2[m]].reset_index()
                     bp_df_=bp_df[['ID_ORDER','TÊN_HANDPICK','Tình_trạng']]
-                    bp_df_
+                    st.markdown("**{}: {} mã**".format(list_2[m],len(bp_df_['ID_ORDER'].tolist()),unsafe_allow_html=True))
+                    
+                    st.markdown('')
+
+                    st.dataframe(bp_df_.style.applymap(color_survived, subset=['Tình_trạng']))
             with c2:
                 cho=st.selectbox('Chọn danh sách cần tải',['ĐH đang tạm ngừng','ĐH đang thiếu/sai','ĐH đang triển khai'])
             with c3:
