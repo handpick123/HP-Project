@@ -41,7 +41,7 @@ def created_data():
         sub_order_=sub_order_[['ID_ORDER','ID','Descriptions']]
 
         order_df=order_.merge(sub_order_,how='left',on='ID_ORDER')
-        order_df=order_df[['ID_ORDER','TÊN_HANDPICK','S/L','NGÀY_XUẤT','ID','Descriptions']]
+        order_df=order_df[['ID_ORDER','TÊN_TTF','S/L','NGÀY_XUẤT','ID','Descriptions']]
 
         order_df=order_df.rename(columns={'Descriptions':'Loại ĐH'})
 
