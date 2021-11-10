@@ -194,7 +194,7 @@ def main():
             for l in range(0,round(len(list_1))):
                 with r3_1:
                     bp_df=or_result[or_result['Bộ_Phận']==list_1[l]].reset_index()
-                    bp_df_=bp_df[['ID_ORDER','TÊN_HANDPICK','Tình_trạng']]
+                    bp_df_=bp_df[['ID_ORDER','TÊN_TTF','Tình_trạng']]
                     st.markdown("**{}: {} mã**".format(list_1[l],len(bp_df_['ID_ORDER'].tolist()),unsafe_allow_html=True))
                     st.markdown('')
 
