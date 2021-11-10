@@ -189,7 +189,7 @@ def main():
    
 
             r3_1,r3_2,r3_3,r3_4=st.columns((1.25,1.25,1,1))
-            list_1=['0. Chưa cập nhật','B. PKTH',,'G. Sơn','I. Nệm']
+            list_1=['0. Chưa cập nhật','B. PKTH','G. Sơn','I. Nệm']
             list_2=['A. Đơn hàng','E. Định hình','K. QC TP']
             for l in range(0,round(len(list_1))):
                 with r3_1:
