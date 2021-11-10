@@ -31,7 +31,7 @@ def created_data():
         sh4=gc1.open('Handpick - Đơn đặt hàng').worksheet('1. DON HANG')
         order=sh4.get_all_records()
         order_=pd.DataFrame(order)
-        order_=order_.drop(columns={'KHÁCH HÀNG','NHÓM','ĐVT','QUI CÁCH','ĐÓNG GÓI','LOẠI QC','GHI CHÚ','NMSX','LOẠI HÀNG','GỖ','SƠN','NỆM','TÊN TTF','NGÀY LẬP','SỐ ĐƠN HÀNG'},axis=0)
+        order_=order_.drop(columns={'KHÁCH HÀNG','NHÓM','ĐVT','QUI CÁCH','ĐÓNG GÓI','LOẠI QC','GHI CHÚ','NMSX','LOẠI HÀNG','GỖ','SƠN','NỆM','TÊN HANDPICK','NGÀY LẬP','SỐ ĐƠN HÀNG'},axis=0)
         order_['S/L']=order_['S/L'].astype('str')
         order_['ID ORDER']=order_['ID ORDER'].astype('str')
         order_.columns=order_.columns.str.replace(" ","_")    
@@ -106,7 +106,7 @@ def created_data():
         tm_df_=tm_df_.rename(columns={'index':'ID_ORDER','Bước':'STEP'})
 
         order_D=tm_df_.merge(order_df,how='left',on='ID_ORDER')
-        order_D_=order_D[['ID_ORDER','Thời_gian','TÊN_HANDPICK','Tình_trạng','Bộ_Phận']]
+        order_D_=order_D[['ID_ORDER','Thời_gian','TÊN_TTF','Tình_trạng','Bộ_Phận']]
         order_tm=order_D_.merge(ncc_,how='left',on='ID_ORDER')
         order_tm['Chi_tiết']=order_tm['Chi_tiết'].replace(np.nan,'Chưa cập nhật')
         order_tm=order_tm.rename(columns={'Chi_tiết':'NCC'})
@@ -204,7 +204,7 @@ def main():
             for m in range(0,round(len(list_2))):
                 with r3_2:
                     bp_df=or_result[or_result['Bộ_Phận']==list_2[m]].reset_index()
-                    bp_df_=bp_df[['ID_ORDER','TÊN_HANDPICK','Tình_trạng']]
+                    bp_df_=bp_df[['ID_ORDER','TÊN_TTF','Tình_trạng']]
                     st.markdown("**{}: {} mã**".format(list_2[m],len(bp_df_['ID_ORDER'].tolist()),unsafe_allow_html=True))
                     
                     st.markdown('')
