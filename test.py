@@ -189,8 +189,8 @@ def main():
    
 
             r3_1,r3_2,r3_3,r3_4=st.columns((1.25,1.25,1,1))
-            list_1=['0. Chưa cập nhật','B. PKTH','E. Định hình','G. Sơn','I. Nệm']
-            list_2=['A. Đơn hàng','C. Phôi','F. Nguội','K. QC TP']
+            list_1=['0. Chưa cập nhật','B. PKTH',,'G. Sơn','I. Nệm']
+            list_2=['A. Đơn hàng','E. Định hình','K. QC TP']
             for l in range(0,round(len(list_1))):
                 with r3_1:
                     bp_df=or_result[or_result['Bộ_Phận']==list_1[l]].reset_index()
