@@ -167,7 +167,7 @@ def main():
             with c1_2:
                 st.markdown('### B. TIẾN ĐỘ CHUNG')
             with c1_1:
-                st.markdown('### A. TIẾN ĐỘ ĐƠN HÀNG: {}'.format(len(order_df['ID_ORDER'].tolist())))
+                st.markdown('### A. TIẾN ĐỘ ĐƠN HÀNG: {} mã'.format(len(order_df['ID_ORDER'].tolist())))
             with c1:
                 id_or=st.text_input('Nhập SĐH',)
             col1,col2=st.columns((2.5,2))
