@@ -31,7 +31,7 @@ def created_data():
         sh4=gc1.open('Handpick - Đơn đặt hàng').worksheet('1. DON HANG')
         order=sh4.get_all_records()
         order_=pd.DataFrame(order)
-        order_=order_.drop(columns={'KHÁCH HÀNG','NHÓM','ĐVT','QUI CÁCH','ĐÓNG GÓI','LOẠI QC','GHI CHÚ','NMSX','LOẠI HÀNG','GỖ','SƠN','NỆM','TÊN HANDPICK','NGÀY LẬP','SỐ ĐƠN HÀNG'},axis=0)
+        order_=order_.drop(columns={'KHÁCH HÀNG','NHÓM','ĐVT','QUI CÁCH','ĐÓNG GÓI','LOẠI QC','GHI CHÚ','NMSX','LOẠI HÀNG','GỖ','NỆM','TÊN HANDPICK','NGÀY LẬP','SỐ ĐƠN HÀNG'},axis=0)
         order_['S/L']=order_['S/L'].astype('str')
         order_['ID ORDER']=order_['ID ORDER'].astype('str')
         order_.columns=order_.columns.str.replace(" ","_")    
@@ -41,7 +41,7 @@ def created_data():
         sub_order_=sub_order_[['ID_ORDER','ID','Descriptions']]
 
         order_df=order_.merge(sub_order_,how='left',on='ID_ORDER')
-        order_df=order_df[['ID_ORDER','TÊN_TTF','S/L','NGÀY_XUẤT','ID','Descriptions']]
+        order_df=order_df[['ID_ORDER','TÊN_TTF','S/L','SƠN','NGÀY_XUẤT','ID','Descriptions']]
 
         order_df=order_df.rename(columns={'Descriptions':'Loại ĐH'})
 
@@ -106,7 +106,7 @@ def created_data():
         tm_df_=tm_df_.rename(columns={'index':'ID_ORDER','Bước':'STEP'})
 
         order_D=tm_df_.merge(order_df,how='left',on='ID_ORDER')
-        order_D_=order_D[['ID_ORDER','Thời_gian','TÊN_TTF','Tình_trạng','Bộ_Phận']]
+        order_D_=order_D[['ID_ORDER','Thời_gian','TÊN_TTF','Tình_trạng','Bộ_Phận','S/L']]
         order_tm=order_D_.merge(ncc_,how='left',on='ID_ORDER')
         order_tm['Chi_tiết']=order_tm['Chi_tiết'].replace(np.nan,'Chưa cập nhật')
         order_tm=order_tm.rename(columns={'Chi_tiết':'NCC'})
@@ -160,56 +160,179 @@ def main():
             last_status=list[0]
             order_df=list[1]
             order_df=order_df.drop(columns={'ID'})
-
+            # order_df
             D=list[2]
-            c1_1,c1_2=st.columns((2.5,2))
-            c1,c2,c3,C4= st.columns((.833,.833,.833,1.75))
-            with c1_2:
-                st.markdown('### B. TIẾN ĐỘ CHUNG')
-            with c1_1:
-                st.markdown('### A. TIẾN ĐỘ ĐƠN HÀNG: {} mã'.format(len(order_df['ID_ORDER'].tolist())))
+            c1,c2,c3= st.columns((.833,.833,.833))
+
+            st.markdown('### DANH SÁCH CÁC ĐƠN HÀNG ĐANG CÓ: {} mã - {} sp'.format(len(order_df['ID_ORDER'].tolist()),sum(order_df['S/L'].astype(int)),unsafe_allow_html=True))
             with c1:
                 id_or=st.text_input('Nhập SĐH',)
-            col1,col2=st.columns((2.5,2))
+            # col1,col2=st.columns((2.5,2))
             list_order=[]
             or_result=0
-            with col1:
-                if not id_or:
-                    or_result=order_df
-                    TM=D
-                else:
-                    or_result=order_df.loc[order_df['ID_ORDER'].str.contains(id_or,na=False)]
-                    TM=D[D['ID_ORDER'].str.contains(id_or,na=False)]
-                list_order=or_result['ID_ORDER'].unique().tolist()
-                or_result[['Tình_trạng','Bộ_Phận']]=or_result[['Tình_trạng','Bộ_Phận']].fillna(value='0. Chưa cập nhật')
+            # with col1:
+            if not id_or:
+                or_result=order_df
+                TM=D
+            else:
+                or_result=order_df.loc[order_df['ID_ORDER'].str.contains(id_or,na=False)]
+                TM=D[D['ID_ORDER'].str.contains(id_or,na=False)].set_index(drop=True)
+            list_order=or_result['ID_ORDER'].unique().tolist()
+            or_result[['Tình_trạng','Bộ_Phận']]=or_result[['Tình_trạng','Bộ_Phận']].fillna(value='0. Chưa cập nhật')
+            c1_1,c1_2=st.columns((4,2))
+
+            with c1_1:
                 st.markdown('')
-                st.dataframe(or_result.style.applymap(color_survived, subset=['Tình_trạng']))
-                st.markdown("**D. Thu mua: {} mã**".format(len(D['ID_ORDER'].tolist()),unsafe_allow_html=True))
-                st.dataframe(D.style.applymap(color_survived, subset=['Tình_trạng']))
-   
+                st.dataframe(or_result.style.applymap(color_survived, subset=['Tình_trạng']),height =200,width=1200)
+                st.markdown('')
+                st.markdown('')
+            with c1_2:
+                st.subheader('Báo cáo tổng quan')
+                st.markdown("")
 
-            r3_1,r3_2,r3_3,r3_4=st.columns((1.25,1.25,1,1))
-            list_1=['0. Chưa cập nhật','B. PKTH','G. Sơn','I. Nệm']
-            list_2=['A. Đơn hàng','C. Phôi','E. Hàng trắng','K. QC TP']
-            for l in range(0,round(len(list_1))):
-                with r3_1:
-                    bp_df=or_result[or_result['Bộ_Phận']==list_1[l]].reset_index()
-                    bp_df_=bp_df[['ID_ORDER','TÊN_TTF','Tình_trạng']]
-                    st.markdown("**{}: {} mã**".format(list_1[l],len(bp_df_['ID_ORDER'].tolist()),unsafe_allow_html=True))
-                    st.markdown('')
+                tn=or_result[or_result['Tình_trạng'].str.contains('Tạm ngưng')]
+                ts=or_result[or_result['Tình_trạng'].str.contains('thiếu/sai')]
+                xl=or_result[or_result['Tình_trạng'].str.contains('Đang')]
 
-                    st.dataframe(bp_df_.style.applymap(color_survived, subset=['Tình_trạng']))
 
+
+                st.write('**Đang xử lí: **{} mã với {} sp'.format(len(xl['ID_ORDER'].tolist()),sum(xl['S/L'].astype(int)),unsafe_allow_html=True))
+                st.write('**Đang tạm ngưng:** {} mã với {} sp'.format(len(tn['ID_ORDER'].tolist()),sum(tn['S/L'].astype(int)),unsafe_allow_html=True))
+                st.write('**Đang thiếu/sai thông tin:** {} mã với {} sp'.format(len(ts['ID_ORDER'].tolist()),sum(ts['S/L'].astype(int)),unsafe_allow_html=True))
+                # st.write('Số đơn hàng đang đã :')     
+                # 
+                # 
+                # 
+
+
+
+
+
+
+
+
+
+
+            st.markdown("#### Tình trạng thu mua:{} mã - {} sp".format(len(D['ID_ORDER'].tolist()),sum(D['S/L'].astype(int)),unsafe_allow_html=True))
+            st.dataframe(D.style.applymap(color_survived, subset=['Tình_trạng']),height =200)
+            st.markdown('')
+            st. markdown('')       
+            bp_df=or_result[or_result['Bộ_Phận']=='0. Chưa cập nhật']
+            bp_df_=bp_df[['ID_ORDER','TÊN_TTF','S/L','SƠN','Tình_trạng']].reset_index(drop=True)
+
+            st.markdown("#### 0. Chưa cập nhật: {} mã - {} sp".format(len(bp_df_['ID_ORDER'].tolist()),sum(bp_df_['S/L'].astype(int)),unsafe_allow_html=True))
+
+            st.dataframe(bp_df_.style.applymap(color_survived, subset=['Tình_trạng']),height =200,width=850)
+            st.markdown('')
+            st. markdown('')     
+
+
+
+            r3_1,R,r3_2=st.columns((1.25,.1,1.25))
+            list_1=['A. Đơn hàng','B. PKTH','G. Sơn','I. Nệm']
+            list_2=['C. Phôi','E. Hàng trắng','K. QC TP']
+        
+            # for l in range(0,round(len(list_1))):
+            with r3_1:
+                bp_df=or_result[or_result['Bộ_Phận']=='A. Đơn hàng']
+                bp_df_=bp_df[['ID_ORDER','TÊN_TTF','S/L','SƠN','Tình_trạng']].reset_index(drop=True)
+
+                st.markdown("#### A. Đơn hàng: {} mã - {} sp".format(len(bp_df_['ID_ORDER'].tolist()),sum(bp_df_['S/L'].astype(int)),unsafe_allow_html=True))
+
+                st.dataframe(bp_df_.style.applymap(color_survived, subset=['Tình_trạng']),height =200,width=850)
+                st.markdown('')
+                st. markdown('')                     
+
+            with r3_2:
+
+                bp_df=or_result[or_result['Bộ_Phận']=='B. PKTH']
+                bp_df_=bp_df[['ID_ORDER','TÊN_TTF','S/L','SƠN','Tình_trạng']].reset_index(drop=True)
+                st.markdown("####  B. PKTH: {} mã - {} sp".format(len(bp_df_['ID_ORDER'].tolist()),sum(bp_df_['S/L'].astype(int)),unsafe_allow_html=True))
+
+                st.dataframe(bp_df_.style.applymap(color_survived, subset=['Tình_trạng']),height =200,width=850)
+                st.markdown('')
+                st.markdown('')     
+            r31,R,r32=st.columns((1.25,.1,1.25))
+            with r31:
+                bp_df=or_result[or_result['Bộ_Phận']=='C. Phôi']
+                bp_df_=bp_df[['ID_ORDER','TÊN_TTF','S/L','SƠN','Tình_trạng']].reset_index(drop=True)
+                st.markdown("#### C. Phôi: {} mã - {} sp".format(len(bp_df_['ID_ORDER'].tolist()),sum(bp_df_['S/L'].astype(int)),unsafe_allow_html=True))
+
+                st.dataframe(bp_df_.style.applymap(color_survived, subset=['Tình_trạng']),height =200,width=850)
+                st.markdown('')           
+                st.markdown('')                         
+
+            with r32:
+                bp_df=or_result[or_result['Bộ_Phận']=='G. Sơn']
+                bp_df_=bp_df[['ID_ORDER','TÊN_TTF','S/L','SƠN','Tình_trạng']].reset_index(drop=True)
+                st.markdown("#### G. Sơn: {} mã - {} sp".format(len(bp_df_['ID_ORDER'].tolist()),sum(bp_df_['S/L'].astype(int)),unsafe_allow_html=True))
+
+                st.dataframe(bp_df_.style.applymap(color_survived, subset=['Tình_trạng']),height =200,width=850)
+                st.markdown('')          
+                st.markdown('')     
+            r33,R,r34=st.columns((1.25,.1,1.25))
+            with r33:
+                bp_df=or_result[or_result['Bộ_Phận']=='I. Nệm']
+                bp_df_=bp_df[['ID_ORDER','TÊN_TTF','S/L','SƠN','Tình_trạng']].reset_index(drop=True)
+                st.markdown("#### I. Nệm: {} mã - {} sp".format(len(bp_df_['ID_ORDER'].tolist()),sum(bp_df_['S/L'].astype(int)),unsafe_allow_html=True))
+
+                st.dataframe(bp_df_.style.applymap(color_survived, subset=['Tình_trạng']),height =200,width=850)
+                st.markdown('')            
+                st.markdown('')                         
+
+            with r34:
+                bp_df=or_result[or_result['Bộ_Phận']=='E. Hàng trắng']
+                bp_df_=bp_df[['ID_ORDER','TÊN_TTF','S/L','SƠN','Tình_trạng']].reset_index(drop=True)
+                st.markdown( "#### D. Hàng trắng: {} mã - {} sp".format(len(bp_df_['ID_ORDER'].tolist()),sum(bp_df_['S/L'].astype(int)),unsafe_allow_html=True))
+
+                st.dataframe(bp_df_.style.applymap(color_survived, subset=['Tình_trạng']),height =200,width=850)
+                st.markdown('')
+                st.markdown('')     
+            r35,R,r36=st.columns((1.25,.1,1.25))
+            with r35:
+                bp_df=or_result[or_result['Bộ_Phận']=='K. QC TP']
+                bp_df_=bp_df[['ID_ORDER','TÊN_TTF','S/L','SƠN','Tình_trạng']].reset_index(drop=True)
+                st.markdown("#### K. QC TP: {} mã - {} sp ".format(len(bp_df_['ID_ORDER'].tolist()),sum(bp_df_['S/L'].astype(int)),unsafe_allow_html=True))
+
+                st.dataframe(bp_df_.style.applymap(color_survived, subset=['Tình_trạng']),height =200,width=850)
+            
                     
-            for m in range(0,round(len(list_2))):
-                with r3_2:
-                    bp_df=or_result[or_result['Bộ_Phận']==list_2[m]].reset_index()
-                    bp_df_=bp_df[['ID_ORDER','TÊN_TTF','Tình_trạng']]
-                    st.markdown("**{}: {} mã**".format(list_2[m],len(bp_df_['ID_ORDER'].tolist()),unsafe_allow_html=True))
-                    
-                    st.markdown('')
 
-                    st.dataframe(bp_df_.style.applymap(color_survived, subset=['Tình_trạng']))
+            with r36:
+                bp_df=or_result[or_result['Bộ_Phận']=='Hoàn thành']
+                bp_df_=bp_df[['ID_ORDER','TÊN_TTF','S/L','SƠN','Tình_trạng']].reset_index(drop=True)
+                st.markdown("#### Đơn hàng đã hoàn tất: {} mã - {} sp".format(len(bp_df_['ID_ORDER'].tolist()),sum(bp_df_['S/L'].astype(int)),unsafe_allow_html=True))
+
+                st.dataframe(bp_df_.style.applymap(color_survived, subset=['Tình_trạng']),height =200,width=300)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             with c2:
                 cho=st.selectbox('Chọn danh sách cần tải',['ĐH đang tạm ngừng','ĐH đang thiếu/sai','ĐH đang triển khai'])
             with c3:
