@@ -199,6 +199,7 @@ def main():
                    pd.np.where(temp.str.contains("thiếu"), "thiếu/sai thông tin", 'Đang xử lí'))))
                 group=gr.groupby('Tình_trạng_2').agg({'ID_ORDER':'count'}).reset_index()
                 import seaborn as sns
+                st.set_option('deprecation.showPyplotGlobalUse', False)
                 sns.barplot(data=group,y='Tình_trạng_2',x='ID_ORDER')
                 st.pyplot()
 
