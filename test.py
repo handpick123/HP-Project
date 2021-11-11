@@ -1,3 +1,4 @@
+from itertools import groupby
 import streamlit as st
 from google.oauth2 import service_account
 from datetime import datetime as dt #-> Để xử lý data dạng datetime
@@ -160,7 +161,7 @@ def main():
             last_status=list[0]
             order_df=list[1]
             order_df=order_df.drop(columns={'ID'})
-            # order_df
+            order_df['S/L']=order_df['S/L'].astype(int)
             D=list[2]
             c1,c2,c3= st.columns((.833,.833,.833))
 
@@ -188,35 +189,16 @@ def main():
                 st.markdown('')
             with c1_2:
                 st.subheader('Báo cáo tổng quan')
-                tn=or_result[or_result['Tình_trạng'].str.contains('Tạm ngưng')]
-                ts=or_result[or_result['Tình_trạng'].str.contains('thiếu/sai')]
-                xl=or_result[or_result['Tình_trạng'].str.contains('Đang')]
-                gr=or_result.copy()
-                temp=gr.Tình_trạng.fillna("0")
-                gr['Tình_trạng_2'] = pd.np.where(temp.str.contains("0"),"Chưa cập nhật",
-                   pd.np.where(temp.str.contains("Tạm ngưng"), "Tạm ngưng",
-                   pd.np.where(temp.str.contains("Đợi"), "Đợi thông tin KH",
-                   pd.np.where(temp.str.contains("thiếu"), "thiếu/sai thông tin", 'Đang xử lí'))))
-                group=gr.groupby('Tình_trạng_2').agg({'ID_ORDER':'count'}).reset_index()
-                import seaborn as sns
-                st.set_option('deprecation.showPyplotGlobalUse', False)
-                sns.barplot(data=group,y='Tình_trạng_2',x='ID_ORDER')
-                st.pyplot()
-
-
-                # st.write('**Đang xử lí: **{} mã với {} sp'.format(len(xl['ID_ORDER'].tolist()),sum(xl['S/L'].astype(int)),unsafe_allow_html=True))
-                # st.write('**Đang tạm ngưng:** {} mã với {} sp'.format(len(tn['ID_ORDER'].tolist()),sum(tn['S/L'].astype(int)),unsafe_allow_html=True))
-                # st.write('**Đang thiếu/sai thông tin:** {} mã với {} sp'.format(len(ts['ID_ORDER'].tolist()),sum(ts['S/L'].astype(int)),unsafe_allow_html=True))
-                # st.write('Số đơn hàng đang đã :')     
-                # 
-                # 
-                # 
-
-
-
-
-
-
+                st.markdown('##### Đang xử lí tại các bộ phận:')
+                doing=or_result[or_result['Tình_trạng'].str.contains('ngưng')==False]
+                group=doing.groupby('Bộ_Phận').agg({'ID_ORDER':'count','S/L':'sum'}).reset_index()
+                group
+                pen=or_result[or_result['Tình_trạng'].str.contains('ngưng')==True]
+                er = or_result[or_result['Tình_trạng'].str.contains('sai')==True]
+                st.markdown("##### Tạm ngưng: {} mã - {} sp".format(len(pen['ID_ORDER'].tolist()),sum(pen['S/L'].astype(int)),unsafe_allow_html=True))
+                # group2=doing.groupby('Bộ_Phận').agg({'ID_ORDER':'count','S/L':'sum'}).reset_index()
+                st.markdown("##### Đang sai/thiếu thông tin: {} mã - {} sp".format(len(er['ID_ORDER'].tolist()),sum(er['S/L'].astype(int)),unsafe_allow_html=True))
+             
 
 
 
