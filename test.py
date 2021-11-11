@@ -111,13 +111,13 @@ def created_data():
         order_tm['Chi_tiết']=order_tm['Chi_tiết'].replace(np.nan,'Chưa cập nhật')
         order_tm=order_tm.rename(columns={'Chi_tiết':'NCC'})
         spreadsheet_key = '1DHvhU43JWaeODEUGel9JknkgVJWBen1RNtzRhViq93g' # input SPREADSHEET_KEY HERE
-        sh = gc1.open_by_key(spreadsheet_key)
-        # ACCES GOOGLE SHEET
-        sheet_index_no1 = 3
+#         sh = gc1.open_by_key(spreadsheet_key)
+#         # ACCES GOOGLE SHEET
+#         sheet_index_no1 = 3
 
-        worksheet1 = sh.get_worksheet(sheet_index_no1)#-> 0 - first sheet, 1 - second sheet etc. 
+#         worksheet1 = sh.get_worksheet(sheet_index_no1)#-> 0 - first sheet, 1 - second sheet etc. 
 
-        set_with_dataframe(worksheet1, order_tm) #-> Upload user_df vào Sheet đầu tiên trong Spreadsheet
+#         set_with_dataframe(worksheet1, order_tm) #-> Upload user_df vào Sheet đầu tiên trong Spreadsheet
 
         return new_status,order_df_f,order_tm
 st.set_page_config(layout='wide')
