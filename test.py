@@ -187,7 +187,7 @@ def main():
                 st.markdown('')
                 st.markdown('')
             with c1_2:
-                st.subheader('Báo cáo tổng quan')
+                st.subheader('Báo cáo tổng quan:')
                 st.markdown("")
 
                 tn=or_result[or_result['Tình_trạng'].str.contains('Tạm ngưng')]
@@ -197,7 +197,7 @@ def main():
 
 
                 st.write('**Đang xử lí: **{} mã với {} sp'.format(len(xl['ID_ORDER'].tolist()),sum(xl['S/L'].astype(int)),unsafe_allow_html=True))
-                st.write('**Đang tạm ngưng:** {} mã với {} sp'.format(len(tn['ID_ORDER'].tolist()),sum(tn['S/L'].astype(int)),unsafe_allow_html=True))
+                st.write('**Tạm ngưng:** {} mã với {} sp'.format(len(tn['ID_ORDER'].tolist()),sum(tn['S/L'].astype(int)),unsafe_allow_html=True))
                 st.write('**Đang thiếu/sai thông tin:** {} mã với {} sp'.format(len(ts['ID_ORDER'].tolist()),sum(ts['S/L'].astype(int)),unsafe_allow_html=True))
                 # st.write('Số đơn hàng đang đã :')     
                 # 
