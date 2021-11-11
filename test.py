@@ -88,7 +88,7 @@ def created_data():
         new_status=pd.DataFrame.from_dict(new_, orient='index').reset_index()
         new_status=new_status.rename(columns={'index':'ID_ORDER','Bước':'STEP'})
         order_df_=order_df.merge(new_status,how='left',on='ID_ORDER')
-        order_df_f=order_df_.drop(columns={'Thời_gian','STEP','NGÀY_XUẤT'})
+        order_df_f=order_df_.drop(columns={'Thời_gian','STEP'})
         D_=data_v.loc[(data_v['Bộ_phận'].str.contains('D')==True)| (data_v['Thao_tác_của_bạn'].str.contains('VN')==True)].sort_values(by=['ID_ORDER','Dấu_thời_gian'])
 
         ncc_=D_[D_['Thao_tác_của_bạn'].str.contains('CF')]
@@ -106,18 +106,18 @@ def created_data():
         tm_df_=tm_df_.rename(columns={'index':'ID_ORDER','Bước':'STEP'})
 
         order_D=tm_df_.merge(order_df,how='left',on='ID_ORDER')
-        order_D_=order_D[['ID_ORDER','Thời_gian','TÊN_TTF','Tình_trạng','Bộ_Phận','S/L']]
+        order_D_=order_D[['ID_ORDER','NGÀY_XUẤT','TÊN_TTF','Tình_trạng','Bộ_Phận','S/L']]
         order_tm=order_D_.merge(ncc_,how='left',on='ID_ORDER')
         order_tm['Chi_tiết']=order_tm['Chi_tiết'].replace(np.nan,'Chưa cập nhật')
         order_tm=order_tm.rename(columns={'Chi_tiết':'NCC'})
         spreadsheet_key = '1DHvhU43JWaeODEUGel9JknkgVJWBen1RNtzRhViq93g' # input SPREADSHEET_KEY HERE
-#         sh = gc1.open_by_key(spreadsheet_key)
-#         # ACCES GOOGLE SHEET
-#         sheet_index_no1 = 3
+        sh = gc1.open_by_key(spreadsheet_key)
+        # ACCES GOOGLE SHEET
+        sheet_index_no1 = 3
 
-#         worksheet1 = sh.get_worksheet(sheet_index_no1)#-> 0 - first sheet, 1 - second sheet etc. 
+        worksheet1 = sh.get_worksheet(sheet_index_no1)#-> 0 - first sheet, 1 - second sheet etc. 
 
-#         set_with_dataframe(worksheet1, order_tm) #-> Upload user_df vào Sheet đầu tiên trong Spreadsheet
+        set_with_dataframe(worksheet1, order_tm) #-> Upload user_df vào Sheet đầu tiên trong Spreadsheet
 
         return new_status,order_df_f,order_tm
 st.set_page_config(layout='wide')
@@ -183,22 +183,29 @@ def main():
 
             with c1_1:
                 st.markdown('')
-                st.dataframe(or_result.style.applymap(color_survived, subset=['Tình_trạng']),height =200,width=1200)
+                st.dataframe(or_result.style.applymap(color_survived, subset=['Tình_trạng']),height =400,width=1200)
                 st.markdown('')
                 st.markdown('')
             with c1_2:
-                st.subheader('Báo cáo tổng quan:')
-                st.markdown("")
-
+                st.subheader('Báo cáo tổng quan')
                 tn=or_result[or_result['Tình_trạng'].str.contains('Tạm ngưng')]
                 ts=or_result[or_result['Tình_trạng'].str.contains('thiếu/sai')]
                 xl=or_result[or_result['Tình_trạng'].str.contains('Đang')]
+                gr=or_result.copy()
+                temp=gr.Tình_trạng.fillna("0")
+                gr['Tình_trạng_2'] = pd.np.where(temp.str.contains("0"),"Chưa cập nhật",
+                   pd.np.where(temp.str.contains("Tạm ngưng"), "Tạm ngưng",
+                   pd.np.where(temp.str.contains("Đợi"), "Đợi thông tin KH",
+                   pd.np.where(temp.str.contains("thiếu"), "thiếu/sai thông tin", 'Đang xử lí'))))
+                group=gr.groupby('Tình_trạng_2').agg({'ID_ORDER':'count'}).reset_index()
+                import seaborn as sns
+                sns.barplot(data=group,y='Tình_trạng_2',x='ID_ORDER')
+                st.pyplot()
 
 
-
-                st.write('**Đang xử lí: **{} mã với {} sp'.format(len(xl['ID_ORDER'].tolist()),sum(xl['S/L'].astype(int)),unsafe_allow_html=True))
-                st.write('**Tạm ngưng:** {} mã với {} sp'.format(len(tn['ID_ORDER'].tolist()),sum(tn['S/L'].astype(int)),unsafe_allow_html=True))
-                st.write('**Đang thiếu/sai thông tin:** {} mã với {} sp'.format(len(ts['ID_ORDER'].tolist()),sum(ts['S/L'].astype(int)),unsafe_allow_html=True))
+                # st.write('**Đang xử lí: **{} mã với {} sp'.format(len(xl['ID_ORDER'].tolist()),sum(xl['S/L'].astype(int)),unsafe_allow_html=True))
+                # st.write('**Đang tạm ngưng:** {} mã với {} sp'.format(len(tn['ID_ORDER'].tolist()),sum(tn['S/L'].astype(int)),unsafe_allow_html=True))
+                # st.write('**Đang thiếu/sai thông tin:** {} mã với {} sp'.format(len(ts['ID_ORDER'].tolist()),sum(ts['S/L'].astype(int)),unsafe_allow_html=True))
                 # st.write('Số đơn hàng đang đã :')     
                 # 
                 # 
@@ -213,12 +220,12 @@ def main():
 
 
 
-            st.markdown("#### Tình trạng thu mua:{} mã - {} sp".format(len(D['ID_ORDER'].tolist()),sum(D['S/L'].astype(int)),unsafe_allow_html=True))
+            st.markdown("#### Tình trạng thu mua: {} mã - {} sp".format(len(D['ID_ORDER'].tolist()),sum(D['S/L'].astype(int)),unsafe_allow_html=True))
             st.dataframe(D.style.applymap(color_survived, subset=['Tình_trạng']),height =200)
             st.markdown('')
             st. markdown('')       
             bp_df=or_result[or_result['Bộ_Phận']=='0. Chưa cập nhật']
-            bp_df_=bp_df[['ID_ORDER','TÊN_TTF','S/L','SƠN','Tình_trạng']].reset_index(drop=True)
+            bp_df_=bp_df[['ID_ORDER','NGÀY_XUẤT','TÊN_TTF','S/L','SƠN','Tình_trạng']].reset_index(drop=True)
 
             st.markdown("#### 0. Chưa cập nhật: {} mã - {} sp".format(len(bp_df_['ID_ORDER'].tolist()),sum(bp_df_['S/L'].astype(int)),unsafe_allow_html=True))
 
@@ -235,7 +242,7 @@ def main():
             # for l in range(0,round(len(list_1))):
             with r3_1:
                 bp_df=or_result[or_result['Bộ_Phận']=='A. Đơn hàng']
-                bp_df_=bp_df[['ID_ORDER','TÊN_TTF','S/L','SƠN','Tình_trạng']].reset_index(drop=True)
+                bp_df_=bp_df[['ID_ORDER','NGÀY_XUẤT','TÊN_TTF','S/L','SƠN','Tình_trạng']].reset_index(drop=True)
 
                 st.markdown("#### A. Đơn hàng: {} mã - {} sp".format(len(bp_df_['ID_ORDER'].tolist()),sum(bp_df_['S/L'].astype(int)),unsafe_allow_html=True))
 
@@ -246,7 +253,7 @@ def main():
             with r3_2:
 
                 bp_df=or_result[or_result['Bộ_Phận']=='B. PKTH']
-                bp_df_=bp_df[['ID_ORDER','TÊN_TTF','S/L','SƠN','Tình_trạng']].reset_index(drop=True)
+                bp_df_=bp_df[['ID_ORDER','NGÀY_XUẤT','TÊN_TTF','S/L','SƠN','Tình_trạng']].reset_index(drop=True)
                 st.markdown("####  B. PKTH: {} mã - {} sp".format(len(bp_df_['ID_ORDER'].tolist()),sum(bp_df_['S/L'].astype(int)),unsafe_allow_html=True))
 
                 st.dataframe(bp_df_.style.applymap(color_survived, subset=['Tình_trạng']),height =200,width=850)
@@ -255,7 +262,7 @@ def main():
             r31,R,r32=st.columns((1.25,.1,1.25))
             with r31:
                 bp_df=or_result[or_result['Bộ_Phận']=='C. Phôi']
-                bp_df_=bp_df[['ID_ORDER','TÊN_TTF','S/L','SƠN','Tình_trạng']].reset_index(drop=True)
+                bp_df_=bp_df[['ID_ORDER','NGÀY_XUẤT','TÊN_TTF','S/L','SƠN','Tình_trạng']].reset_index(drop=True)
                 st.markdown("#### C. Phôi: {} mã - {} sp".format(len(bp_df_['ID_ORDER'].tolist()),sum(bp_df_['S/L'].astype(int)),unsafe_allow_html=True))
 
                 st.dataframe(bp_df_.style.applymap(color_survived, subset=['Tình_trạng']),height =200,width=850)
@@ -264,7 +271,7 @@ def main():
 
             with r32:
                 bp_df=or_result[or_result['Bộ_Phận']=='E. Hàng trắng']
-                bp_df_=bp_df[['ID_ORDER','TÊN_TTF','S/L','SƠN','Tình_trạng']].reset_index(drop=True)
+                bp_df_=bp_df[['ID_ORDER','NGÀY_XUẤT','TÊN_TTF','S/L','SƠN','Tình_trạng']].reset_index(drop=True)
                 st.markdown("#### D. Hàng trắng: {} mã - {} sp".format(len(bp_df_['ID_ORDER'].tolist()),sum(bp_df_['S/L'].astype(int)),unsafe_allow_html=True))
 
                 st.dataframe(bp_df_.style.applymap(color_survived, subset=['Tình_trạng']),height =200,width=850)
@@ -273,7 +280,7 @@ def main():
             r33,R,r34=st.columns((1.25,.1,1.25))
             with r33:
                 bp_df=or_result[or_result['Bộ_Phận']=='G. Sơn']
-                bp_df_=bp_df[['ID_ORDER','TÊN_TTF','S/L','SƠN','Tình_trạng']].reset_index(drop=True)
+                bp_df_=bp_df[['ID_ORDER','NGÀY_XUẤT','TÊN_TTF','S/L','SƠN','Tình_trạng']].reset_index(drop=True)
                 st.markdown("#### E. Sơn: {} mã - {} sp".format(len(bp_df_['ID_ORDER'].tolist()),sum(bp_df_['S/L'].astype(int)),unsafe_allow_html=True))
 
                 st.dataframe(bp_df_.style.applymap(color_survived, subset=['Tình_trạng']),height =200,width=850)
@@ -282,7 +289,7 @@ def main():
 
             with r34:
                 bp_df=or_result[or_result['Bộ_Phận']=='I. Nệm']
-                bp_df_=bp_df[['ID_ORDER','TÊN_TTF','S/L','SƠN','Tình_trạng']].reset_index(drop=True)
+                bp_df_=bp_df[['ID_ORDER','NGÀY_XUẤT','TÊN_TTF','S/L','SƠN','Tình_trạng']].reset_index(drop=True)
                 st.markdown( "#### F. Nệm: {} mã - {} sp".format(len(bp_df_['ID_ORDER'].tolist()),sum(bp_df_['S/L'].astype(int)),unsafe_allow_html=True))
 
                 st.dataframe(bp_df_.style.applymap(color_survived, subset=['Tình_trạng']),height =200,width=850)
@@ -291,7 +298,7 @@ def main():
             r35,R,r36=st.columns((1.25,.1,1.25))
             with r35:
                 bp_df=or_result[or_result['Bộ_Phận']=='K. QC TP']
-                bp_df_=bp_df[['ID_ORDER','TÊN_TTF','S/L','SƠN','Tình_trạng']].reset_index(drop=True)
+                bp_df_=bp_df[['ID_ORDER','NGÀY_XUẤT','TÊN_TTF','S/L','SƠN','Tình_trạng']].reset_index(drop=True)
                 st.markdown("#### G. QC TP: {} mã - {} sp ".format(len(bp_df_['ID_ORDER'].tolist()),sum(bp_df_['S/L'].astype(int)),unsafe_allow_html=True))
 
                 st.dataframe(bp_df_.style.applymap(color_survived, subset=['Tình_trạng']),height =200,width=850)
@@ -300,7 +307,7 @@ def main():
 
             with r36:
                 bp_df=or_result[or_result['Bộ_Phận']=='Hoàn thành']
-                bp_df_=bp_df[['ID_ORDER','TÊN_TTF','S/L','SƠN','Tình_trạng']].reset_index(drop=True)
+                bp_df_=bp_df[['ID_ORDER','NGÀY_XUẤT','TÊN_TTF','S/L','SƠN','Tình_trạng']].reset_index(drop=True)
                 st.markdown("#### Đơn hàng đã hoàn tất: {} mã - {} sp".format(len(bp_df_['ID_ORDER'].tolist()),sum(bp_df_['S/L'].astype(int)),unsafe_allow_html=True))
 
                 st.dataframe(bp_df_.style.applymap(color_survived, subset=['Tình_trạng']),height =200,width=300)
