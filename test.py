@@ -163,6 +163,7 @@ def main():
             order_df=order_df.drop(columns={'ID'})
             order_df['S/L']=order_df['S/L'].astype(int)
             D=list[2]
+            D=D[D['S/L'].isnull()==False]
             c1,c2,c3= st.columns((.833,.833,.833))
 
             st.markdown('### DANH SÁCH CÁC ĐƠN HÀNG ĐANG CÓ: {} mã - {} sp'.format(len(order_df['ID_ORDER'].tolist()),sum(order_df['S/L'].astype(int)),unsafe_allow_html=True))
