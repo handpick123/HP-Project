@@ -161,6 +161,9 @@ def main():
             last_status=list[0]
             order_df=list[1]
             order_df=order_df.drop(columns={'ID'})
+            order_df=order_df.replace("",np.nan)
+            order_df=order_df[order_df['ID_ORDER'].isnull()==False]
+            order_df['S/L']=order_df['S/L'].astype(int)
             order_df['S/L']=order_df['S/L'].astype(int)
             D=list[2]
             D=D[D['S/L'].isnull()==False]
