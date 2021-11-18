@@ -159,7 +159,7 @@ td_l=progress[progress['Bộ_phận'].isin(bp_)]
 td_ll=td_l['Mô_Tả'].tolist()
 
 id_sp=st.multiselect('Có các sản phẩm sau:',id)
-td=st.selectbox('Ở tiến độ',td_ll)
+td=st.multiselect('Ở tiến độ',td_ll)
 
 
 
