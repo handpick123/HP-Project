@@ -7,9 +7,6 @@ import numpy as np
 import pandas as pd #-> Để update data dạng bản
 from gspread_dataframe import set_with_dataframe #-> Để update data lên Google Spreadsheet
 from oauth2client.service_account import ServiceAccountCredentials #-> Để nhập Google Spreadsheet Credentials
-# import seaborn as sns
-import base64
-from io import BytesIO
 def created_data():
                 ## Collect QR scan database from Googlesheet
         credentials = service_account.Credentials.from_service_account_info(
@@ -27,10 +24,28 @@ def created_data():
         sh4=gc1.open('Handpick - Đơn đặt hàng').worksheet('1. DON HANG')
         order=sh4.get_all_records()
         order_=pd.DataFrame(order)
-        order_=order_.drop(columns={'KHÁCH HÀNG','NHÓM','ĐVT','QUI CÁCH','ĐÓNG GÓI','LOẠI QC','GHI CHÚ','NMSX','LOẠI HÀNG','GỖ','NỆM','TÊN HANDPICK','NGÀY LẬP','SỐ ĐƠN HÀNG'},axis=0)     
+        order_=order_.drop(columns={'KHÁCH HÀNG','NHÓM','ĐVT','QUI CÁCH','ĐÓNG GÓI','LOẠI QC','GHI CHÚ','LOẠI HÀNG','GỖ','NỆM','TÊN HANDPICK','NGÀY LẬP','SỐ ĐƠN HÀNG'},axis=0)     
 
         return order_,progress
+def push(df):
+    
+    credentials = service_account.Credentials.from_service_account_info(
+    st.secrets["gcp_service_account"],
+    scopes=['https://spreadsheets.google.com/feeds',
+         'https://www.googleapis.com/auth/drive'],
+    )
+    gc = gspread.authorize(credentials)
+    spreadsheet_key='1KBTVmlT5S2_x9VGseHdk_QDvZIfNBOLJy78lM0p3ORQ'
 
+    import gspread_dataframe as gd
+    import gspread as gs
+
+    ws = gc.open("HP - Hist").worksheet("Trang tính5")
+    existing = gd.get_as_dataframe(ws)
+
+    updated = existing.append(df)
+    gd.set_with_dataframe(ws, updated)
+    st.success('Tải lại trang để tiếp tục nhập liệu')
 
 data=created_data()
 progress=data[1]
@@ -51,4 +66,16 @@ with st.form(key="ac"):
     
     st.form_submit_button("Cập nhật")
 
-
+dic={"Check":id_sp}
+df=pd.DataFrame.from_dict(dic)
+df["Bộ_phận"]=bp_[0]
+df["Mô_Tả"]=td[0]
+df[["TÊN_TTF","ID_ORDER"]]=df.Check.str.split(" _ ",expand=True)
+df[["BỘ_PHẬN","Bộ_phận"]]=df.Bộ_phận.str.split("_",expand=True)
+df['NHÀ_MÁY']="NM5"
+df['Dấu_thời_gian']=pd.to_datetime('today') 
+df=df[['ID_ORDER',"BỘ_PHẬN","Bộ_phận",'Mô_Tả','Dấu_thời_gian',"NHÀ_MÁY"]]
+df['ID_ORDER']=df['ID_ORDER'].astype(str)
+df
+if st.button('Xác nhận'):
+    push(df)
