@@ -190,6 +190,7 @@ def main():
             order_df=order_df[order_df['ID_ORDER'].isnull()==False]
 
             order_df['S/L']=order_df['S/L'].astype(int)
+            order_df['Ngày_giải_quyết']=order_df['Ngày_giải_quyết'].fillna(0)
             D=list[2]
             D=D[D['S/L'].isnull()==False]
             c1,c2,c3= st.columns((.833,.833,.833))
