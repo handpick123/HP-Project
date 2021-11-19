@@ -188,7 +188,6 @@ def main():
             order_df=order_df.drop(columns={'ID'})
             order_df=order_df.replace("",np.nan)
             order_df=order_df[order_df['ID_ORDER'].isnull()==False]
-            order_df['Ngày_giải_quyết"]=order_df['Ngày_giải_quyết"].str.replace(np.nan,0)
 
             order_df['S/L']=order_df['S/L'].astype(int)
             D=list[2]
