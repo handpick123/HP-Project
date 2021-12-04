@@ -239,7 +239,7 @@ def main():
 #             or_result
             
             or_result=or_result[(or_result['Bộ_Phận']!="0")&(or_result['Bộ_Phận']!="L. Hoàn thành")]
-            
+            or_result['ID_ORDER'].tolist()
             st.markdown('### DANH SÁCH CÁC ĐƠN HÀNG ĐANG CÓ: {} mã - {} sp'.format(len(or_result['ID_ORDER'].tolist()),sum(or_result['S/L'].astype(int)),unsafe_allow_html=True))
            
 
