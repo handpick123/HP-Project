@@ -241,7 +241,7 @@ def main():
             or_result=or_result.astype(str)
 #             or_result
             
-            or_result=or_result[(or_result['Bộ_Phận']!="0")]
+            or_result=or_result[(or_result['Bộ_Phận']!="0")&(or_result['Bộ_Phận']!="L. Hoàn thành")]
             
             or_result=or_result[['ID_ORDER','TÊN_TTF','Nhà_máy','NGÀY_XUẤT_MỚI','Bộ_Phận','Tình_trạng','Ngày_giải_quyết','S/L','SƠN','Loại ĐH','CHANGED']]
             or_result['Ngày_giải_quyết']=or_result['Ngày_giải_quyết'].astype(int)
