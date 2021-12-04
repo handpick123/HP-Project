@@ -241,7 +241,7 @@ def main():
             or_result=or_result[['ID_ORDER','TÊN_TTF','Nhà_máy','NGÀY_XUẤT_MỚI','Bộ_Phận','Tình_trạng','Ngày_giải_quyết','S/L','SƠN','Loại ĐH','CHANGED']]
             or_result['Ngày_giải_quyết']=or_result['Ngày_giải_quyết'].astype(int)
             or_result['S/L']=or_result['S/L'].astype(int)
-            or_result1=or_result[(or_result['Bộ_Phận']!="L. Hoàn thành")&(or_result['Bộ_Phận']!="O")]
+            or_result1=or_result[(or_result['Bộ_Phận']!="L. Hoàn thành")+(or_result['Bộ_Phận']!="O")]
 
             or_result11=or_result1.style.applymap(highlight,subset=['Ngày_giải_quyết'])
             or_result111=or_result11.apply(select_col, axis=None)
