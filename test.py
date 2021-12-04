@@ -239,13 +239,12 @@ def main():
             
 
             st.markdown('### DANH SÁCH CÁC ĐƠN HÀNG ĐANG CÓ: {} mã - {} sp'.format(len(or_result['ID_ORDER'].tolist()),sum(or_result['S/L'].astype(int)),unsafe_allow_html=True))
-            or_result1=or_result.astype(str)
-            or_result1=or_result1[(or_result1['Bộ_Phận']!="0")&(or_result1['Bộ_Phận']!="L. Hoàn thành")].reset_index(drop=True)
+            or_result=or_result.astype(str)
+            or_result=or_result[['ID_ORDER','TÊN_TTF','Nhà_máy','NGÀY_XUẤT_MỚI','Bộ_Phận','Tình_trạng','Ngày_giải_quyết','S/L','SƠN','Loại ĐH','CHANGED']]
+            or_result['Ngày_giải_quyết']=or_result['Ngày_giải_quyết'].astype(int)
+            or_result['S/L']=or_result['S/L'].astype(int)
+            or_result1=or_result[(or_result['Bộ_Phận']!="0")&(or_result['Bộ_Phận']!="L. Hoàn thành")].reset_index(drop=True)
            
-        
-            or_result1=or_result1[['ID_ORDER','TÊN_TTF','Nhà_máy','NGÀY_XUẤT_MỚI','Bộ_Phận','Tình_trạng','Ngày_giải_quyết','S/L','SƠN','Loại ĐH','CHANGED']]
-            or_result1['Ngày_giải_quyết']=or_result1['Ngày_giải_quyết'].astype(int)
-            or_result1['S/L']=or_result1['S/L'].astype(int)
             or_result11=or_result1.style.applymap(highlight,subset=['Ngày_giải_quyết'])
             or_result111=or_result11.apply(select_col, axis=None)
             st.dataframe(or_result111.applymap(color,subset=['Tình_trạng']),height =170,width=1400)   
