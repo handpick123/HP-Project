@@ -240,7 +240,7 @@ def main():
 
             st.markdown('### DANH SÁCH CÁC ĐƠN HÀNG ĐANG CÓ: {} mã - {} sp'.format(len(or_result['ID_ORDER'].tolist()),sum(or_result['S/L'].astype(int)),unsafe_allow_html=True))
             or_result1=or_result.astype(str)
-            or_result1=or_result[(or_result['Bộ_Phận']!="0")&(or_result['Bộ_Phận']!="L. Hoàn thành")].reset_index(drop=True)
+            or_result1=or_result1[(or_result1['Bộ_Phận']!="0")&(or_result1['Bộ_Phận']!="L. Hoàn thành")].reset_index(drop=True)
            
         
             or_result1=or_result1[['ID_ORDER','TÊN_TTF','Nhà_máy','NGÀY_XUẤT_MỚI','Bộ_Phận','Tình_trạng','Ngày_giải_quyết','S/L','SƠN','Loại ĐH','CHANGED']]
