@@ -56,7 +56,7 @@ def created_data():
 
         order_df=order_df.rename(columns={'Descriptions':'Loại ĐH'})
         # order_df
-        BB=order_df[order_df['ĐÓNG_GÓI'].str.contains("L")]
+        BB=order_df[order_df['ĐÓNG_GÓI'].str.contains("L")].reset_index(drop=True
         
         sh3=gc1.open('HP - Hist').worksheet('Form')
         Form=sh3.get_all_records()
