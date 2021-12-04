@@ -235,14 +235,14 @@ def main():
             st.markdown("##### Tạm ngưng: {} mã - {} sp".format(len(pen['ID_ORDER'].tolist()),sum(pen['S/L'].astype(int)),unsafe_allow_html=True))
             # group2=doing.groupby('Bộ_Phận').agg({'ID_ORDER':'count','S/L':'sum'}).reset_index()
             st.markdown("##### Đang sai/thiếu thông tin: {} mã - {} sp".format(len(er['ID_ORDER'].tolist()),sum(er['S/L'].astype(int)),unsafe_allow_html=True))
-
-            st.markdown('### DANH SÁCH CÁC ĐƠN HÀNG ĐANG CÓ: {} mã - {} sp'.format(len(order_df['ID_ORDER'].tolist()),sum(order_df['S/L'].astype(int)),unsafe_allow_html=True))
-           
             or_result=or_result.astype(str)
 #             or_result
             
             or_result=or_result[(or_result['Bộ_Phận']!="0")&(or_result['Bộ_Phận']!="L. Hoàn thành")]
             
+            st.markdown('### DANH SÁCH CÁC ĐƠN HÀNG ĐANG CÓ: {} mã - {} sp'.format(len(or_result['ID_ORDER'].tolist()),sum(or_result['S/L'].astype(int)),unsafe_allow_html=True))
+           
+
             or_result=or_result[['ID_ORDER','TÊN_TTF','Nhà_máy','NGÀY_XUẤT_MỚI','Bộ_Phận','Tình_trạng','Ngày_giải_quyết','S/L','SƠN','Loại ĐH','CHANGED']]
             or_result['Ngày_giải_quyết']=or_result['Ngày_giải_quyết'].astype(int)
             or_result['S/L']=or_result['S/L'].astype(int)
