@@ -354,7 +354,7 @@ def main():
 
             st.dataframe(bp_df_.applymap(color,subset=['Tình_trạng']),height =170,width=1400) 
 
-            bp_df=or_result[or_result['Bộ_Phận']=='L. Hoàn thành']
+            bp_df=or_result[or_result['Bộ_Phận']=='L. Hoàn thành'].reset_index(drop=True)
             bp_df_=bp_df[['ID_ORDER','TÊN_TTF','Nhà_máy','NGÀY_XUẤT_MỚI','Tình_trạng','Ngày_giải_quyết','S/L','SƠN','CHANGED']].reset_index(drop=True)
             st.markdown("#### Đơn hàng đã hoàn tất: {} mã - {} sp".format(len(bp_df_['ID_ORDER'].tolist()),sum(bp_df_['S/L'].astype(int)),unsafe_allow_html=True))
             bp_df_=bp_df_.style.applymap(highlight,subset=['Ngày_giải_quyết'])
