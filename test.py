@@ -308,7 +308,7 @@ def main():
             bp_df_=bp_df[['ID_ORDER','TÊN_TTF','Nhà_máy','NGÀY_XUẤT_MỚI','Tình_trạng','Ngày_giải_quyết','S/L','SƠN','CHANGED']].reset_index(drop=True)
             st.markdown("#### C. Phôi: {} mã - {} sp".format(len(bp_df_['ID_ORDER'].tolist()),sum(bp_df_['S/L'].astype(int)),unsafe_allow_html=True))
             bp_df_=bp_df_.style.applymap(highlight,subset=['Ngày_giải_quyết'])
-            bp_df_=bp_df_1.apply(select_col, axis=None)
+            bp_df_=bp_df_.apply(select_col, axis=None)
 
             st.dataframe(bp_df_.applymap(color,subset=['Tình_trạng']),height =170,width=1400) 
             st.markdown('')           
@@ -318,7 +318,7 @@ def main():
             bp_df_=bp_df[['ID_ORDER','TÊN_TTF','Nhà_máy','NGÀY_XUẤT_MỚI','Tình_trạng','Ngày_giải_quyết','S/L','SƠN','CHANGED']].reset_index(drop=True)
             st.markdown("#### D. Hàng trắng: {} mã - {} sp".format(len(bp_df_['ID_ORDER'].tolist()),sum(bp_df_['S/L'].astype(int)),unsafe_allow_html=True))
             bp_df_=bp_df_.style.applymap(highlight,subset=['Ngày_giải_quyết'])
-            bp_df_=bp_df_1.apply(select_col, axis=None)
+            bp_df_=bp_df_.apply(select_col, axis=None)
 
             st.dataframe(bp_df_.applymap(color,subset=['Tình_trạng']),height =170,width=1400) 
             st.markdown('')          
@@ -328,7 +328,7 @@ def main():
             bp_df_=bp_df[['ID_ORDER','TÊN_TTF','Nhà_máy','NGÀY_XUẤT_MỚI','Tình_trạng','Ngày_giải_quyết','S/L','SƠN','CHANGED']].reset_index(drop=True)
             st.markdown("#### E. Sơn: {} mã - {} sp".format(len(bp_df_['ID_ORDER'].tolist()),sum(bp_df_['S/L'].astype(int)),unsafe_allow_html=True))
             bp_df_=bp_df_.style.applymap(highlight,subset=['Ngày_giải_quyết'])
-            bp_df_=bp_df_1.apply(select_col, axis=None)
+            bp_df_=bp_df_.apply(select_col, axis=None)
 
             st.dataframe(bp_df_.applymap(color,subset=['Tình_trạng']),height =170,width=1400) 
             st.markdown('')            
@@ -338,7 +338,7 @@ def main():
             bp_df_=bp_df[['ID_ORDER','TÊN_TTF','Nhà_máy','NGÀY_XUẤT_MỚI','Tình_trạng','Ngày_giải_quyết','S/L','SƠN','CHANGED']].reset_index(drop=True)
             st.markdown( "#### F. Nệm: {} mã - {} sp".format(len(bp_df_['ID_ORDER'].tolist()),sum(bp_df_['S/L'].astype(int)),unsafe_allow_html=True))
             bp_df_=bp_df_.style.applymap(highlight,subset=['Ngày_giải_quyết'])
-            bp_df_=bp_df_1.apply(select_col, axis=None)
+            bp_df_=bp_df_.apply(select_col, axis=None)
 
             st.dataframe(bp_df_.applymap(color,subset=['Tình_trạng']),height =170,width=1400) 
             st.markdown('')
@@ -348,7 +348,7 @@ def main():
             bp_df_=bp_df[['ID_ORDER','TÊN_TTF','Nhà_máy','NGÀY_XUẤT_MỚI','Tình_trạng','Ngày_giải_quyết','S/L','SƠN','CHANGED']].reset_index(drop=True)
             st.markdown("#### G. QC TP: {} mã - {} sp ".format(len(bp_df_['ID_ORDER'].tolist()),sum(bp_df_['S/L'].astype(int)),unsafe_allow_html=True))
             bp_df_=bp_df_.style.applymap(highlight,subset=['Ngày_giải_quyết'])
-            bp_df_=bp_df_1.apply(select_col, axis=None)
+            bp_df_=bp_df_.apply(select_col, axis=None)
 
             st.dataframe(bp_df_.applymap(color,subset=['Tình_trạng']),height =170,width=1400) 
 
@@ -356,7 +356,7 @@ def main():
             bp_df_=bp_df[['ID_ORDER','TÊN_TTF','Nhà_máy','NGÀY_XUẤT_MỚI','Tình_trạng','Ngày_giải_quyết','S/L','SƠN','CHANGED']].reset_index(drop=True)
             st.markdown("#### Đơn hàng đã hoàn tất: {} mã - {} sp".format(len(bp_df_['ID_ORDER'].tolist()),sum(bp_df_['S/L'].astype(int)),unsafe_allow_html=True))
             bp_df_=bp_df_.style.applymap(highlight,subset=['Ngày_giải_quyết'])
-            bp_df_=bp_df_1.apply(select_col, axis=None)
+            bp_df_=bp_df_.apply(select_col, axis=None)
 
             st.dataframe(bp_df_.applymap(color,subset=['Tình_trạng']),height =170,width=1400) 
 
