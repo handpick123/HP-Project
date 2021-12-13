@@ -221,7 +221,7 @@ def main():
                 TM=D
             else:
                 or_result=order_df.loc[order_df['ID_ORDER'].str.contains(id_or,na=False)]
-                TM=D[D['ID_ORDER'].str.contains(id_or,na=False)].set_index(drop=True)
+                TM=D[D['ID_ORDER'].str.contains(id_or,na=False)].reset_index(drop=True)
             list_order=or_result['ID_ORDER'].unique().tolist()
             or_result[['Tình_trạng','Bộ_Phận']]=or_result[['Tình_trạng','Bộ_Phận']].fillna(value='0. Chưa cập nhật')
 
